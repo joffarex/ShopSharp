@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopSharp.UI", "ShopSharp.UI\ShopSharp.UI.csproj", "{0CC6A006-6227-49A4-9CAD-D341495909ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopSharp.Domain", "ShopSharp.Domain\ShopSharp.Domain.csproj", "{9B978EB0-2487-495F-BD80-C2DF66599302}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopSharp.Application", "ShopSharp.Application\ShopSharp.Application.csproj", "{BAEC0EB8-2AC7-4958-B19D-E30F932447E5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0CC6A006-6227-49A4-9CAD-D341495909ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CC6A006-6227-49A4-9CAD-D341495909ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CC6A006-6227-49A4-9CAD-D341495909ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CC6A006-6227-49A4-9CAD-D341495909ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B978EB0-2487-495F-BD80-C2DF66599302}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B978EB0-2487-495F-BD80-C2DF66599302}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B978EB0-2487-495F-BD80-C2DF66599302}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B978EB0-2487-495F-BD80-C2DF66599302}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BAEC0EB8-2AC7-4958-B19D-E30F932447E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAEC0EB8-2AC7-4958-B19D-E30F932447E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAEC0EB8-2AC7-4958-B19D-E30F932447E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAEC0EB8-2AC7-4958-B19D-E30F932447E5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
