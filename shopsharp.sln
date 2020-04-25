@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopSharp.Domain", "ShopSha
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopSharp.Application", "ShopSharp.Application\ShopSharp.Application.csproj", "{BAEC0EB8-2AC7-4958-B19D-E30F932447E5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopSharp.Database", "ShopSharp.Database\ShopSharp.Database.csproj", "{18C65CDD-20EB-4FA5-B3A9-0CD2331DC29E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{BAEC0EB8-2AC7-4958-B19D-E30F932447E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BAEC0EB8-2AC7-4958-B19D-E30F932447E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BAEC0EB8-2AC7-4958-B19D-E30F932447E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18C65CDD-20EB-4FA5-B3A9-0CD2331DC29E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18C65CDD-20EB-4FA5-B3A9-0CD2331DC29E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18C65CDD-20EB-4FA5-B3A9-0CD2331DC29E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18C65CDD-20EB-4FA5-B3A9-0CD2331DC29E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

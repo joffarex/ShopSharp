@@ -4,4 +4,8 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
     </PropertyGroup>
 
+    <ItemGroup>
+        <ProjectReference Include="..\ShopSharp.Database\ShopSharp.Database.csproj"/>
+    </ItemGroup>
+
 </Project>
