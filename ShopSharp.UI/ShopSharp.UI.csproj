@@ -8,5 +8,9 @@
         <ProjectReference Include="..\ShopSharp.Application\ShopSharp.Application.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.2"/>
+    </ItemGroup>
+
 
 </Project>
