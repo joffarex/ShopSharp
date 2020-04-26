@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using ShopSharp.Application.ProductsAdmin;
-using ShopSharp.Application.ProductsAdmin.ViewModels;
+using ShopSharp.Application.ProductsAdmin.Dto;
 using ShopSharp.Database;
 
 namespace ShopSharp.UI.Controllers
@@ -28,21 +29,21 @@ namespace ShopSharp.UI.Controllers
         }
 
         [HttpPost("products")]
-        public IActionResult CreateProduct(ProductViewModel viewModel)
+        public async Task<IActionResult> CreateProduct([FromBody] ProductDto productDto)
         {
-            return Ok(new CreateProduct(_context).Exec(viewModel));
+            return Ok(await new CreateProduct(_context).Exec(productDto));
         }
 
         [HttpPut("products")]
-        public IActionResult UpdateProduct(ProductViewModel viewModel)
+        public async Task<IActionResult> UpdateProduct(int id, [FromBody] ProductDto productDto)
         {
-            return Ok(new UpdateProduct(_context).Exec(viewModel));
+            return Ok(await new UpdateProduct(_context).Exec(id, productDto));
         }
 
         [HttpDelete("products/{id}")]
-        public IActionResult DeleteProduct(int id)
+        public async Task<IActionResult> DeleteProduct(int id)
         {
-            return Ok(new DeleteProduct(_context).Exec(id));
+            return Ok(await new DeleteProduct(_context).Exec(id));
         }
     }
 }

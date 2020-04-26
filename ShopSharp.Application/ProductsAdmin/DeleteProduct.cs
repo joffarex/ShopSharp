@@ -14,11 +14,13 @@ namespace ShopSharp.Application.ProductsAdmin
             _context = context;
         }
 
-        public async Task Exec(int id)
+        public async Task<bool> Exec(int id)
         {
             var product = _context.Products.FirstOrDefault(x => x.Id == id);
             _context.Products.Remove(product ?? throw new Exception("Product not found"));
             await _context.SaveChangesAsync();
+
+            return true;
         }
     }
 }

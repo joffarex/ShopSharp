@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using ShopSharp.Application.ProductsAdmin.Dto;
 using ShopSharp.Application.ProductsAdmin.ViewModels;
 using ShopSharp.Database;
 using ShopSharp.Domain.Models;
@@ -14,16 +15,26 @@ namespace ShopSharp.Application.ProductsAdmin
             _context = context;
         }
 
-        public async Task Exec(ProductViewModel viewModel)
+        public async Task<ProductViewModel> Exec(ProductDto productDto)
         {
-            _context.Products.Add(new Product
+            var product = new Product
             {
-                Name = viewModel.Name,
-                Description = viewModel.Description,
-                Value = decimal.Parse(viewModel.Value)
-            });
+                Name = productDto.Name,
+                Description = productDto.Description,
+                Value = decimal.Parse(productDto.Value)
+            };
+
+            _context.Products.Add(product);
 
             await _context.SaveChangesAsync();
+
+            return new ProductViewModel
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Description = product.Description,
+                Value = $"$ {product.Value:N2}"
+            };
         }
     }
 }

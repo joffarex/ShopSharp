@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using ShopSharp.Application.ProductsAdmin.Dto;
 using ShopSharp.Application.ProductsAdmin.ViewModels;
 using ShopSharp.Database;
 
@@ -15,17 +16,25 @@ namespace ShopSharp.Application.ProductsAdmin
             _context = context;
         }
 
-        public async Task Exec(ProductViewModel viewModel)
+        public async Task<ProductViewModel> Exec(int id, ProductDto productDto)
         {
-            var product = _context.Products.FirstOrDefault(x => x.Id == viewModel.Id);
+            var product = _context.Products.FirstOrDefault(x => x.Id == id);
 
             if (product == null) throw new Exception("Product not found");
 
-            product.Name = viewModel.Name;
-            product.Description = viewModel.Description;
-            product.Value = decimal.Parse(viewModel.Value);
+            product.Name = productDto.Name;
+            product.Description = productDto.Description;
+            product.Value = decimal.Parse(productDto.Value);
 
             await _context.SaveChangesAsync();
+
+            return new ProductViewModel
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Description = product.Description,
+                Value = $"$ {product.Value:N2}"
+            };
         }
     }
 }
