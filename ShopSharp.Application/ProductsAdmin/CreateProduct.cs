@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
-using ShopSharp.Application.Products.ViewModels;
+using ShopSharp.Application.ProductsAdmin.ViewModels;
 using ShopSharp.Database;
 using ShopSharp.Domain.Models;
 
-namespace ShopSharp.Application.Products
+namespace ShopSharp.Application.ProductsAdmin
 {
     public class CreateProduct
     {
