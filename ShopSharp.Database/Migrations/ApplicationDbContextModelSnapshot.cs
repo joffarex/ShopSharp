@@ -216,6 +216,46 @@ namespace ShopSharp.Database.Migrations
                 b.ToTable("AspNetUserTokens");
             });
 
+            modelBuilder.Entity("ShopSharp.Domain.Models.Order", b =>
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int")
+                    .HasAnnotation("SqlServer:ValueGenerationStrategy",
+                        SqlServerValueGenerationStrategy.IdentityColumn);
+
+                b.Property<string>("Address")
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<string>("City")
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<string>("OrderRef")
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<string>("PostCode")
+                    .HasColumnType("nvarchar(max)");
+
+                b.HasKey("Id");
+
+                b.ToTable("Orders");
+            });
+
+            modelBuilder.Entity("ShopSharp.Domain.Models.OrderProduct", b =>
+            {
+                b.Property<int>("ProductId")
+                    .HasColumnType("int");
+
+                b.Property<int>("OrderId")
+                    .HasColumnType("int");
+
+                b.HasKey("ProductId", "OrderId");
+
+                b.HasIndex("OrderId");
+
+                b.ToTable("OrderProducts");
+            });
+
             modelBuilder.Entity("ShopSharp.Domain.Models.Product", b =>
             {
                 b.Property<int>("Id")
@@ -236,6 +276,30 @@ namespace ShopSharp.Database.Migrations
                 b.HasKey("Id");
 
                 b.ToTable("Products");
+            });
+
+            modelBuilder.Entity("ShopSharp.Domain.Models.Stock", b =>
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int")
+                    .HasAnnotation("SqlServer:ValueGenerationStrategy",
+                        SqlServerValueGenerationStrategy.IdentityColumn);
+
+                b.Property<string>("Description")
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<int>("ProductId")
+                    .HasColumnType("int");
+
+                b.Property<int>("Quantity")
+                    .HasColumnType("int");
+
+                b.HasKey("Id");
+
+                b.HasIndex("ProductId");
+
+                b.ToTable("Stocks");
             });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -285,6 +349,30 @@ namespace ShopSharp.Database.Migrations
                 b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
                     .WithMany()
                     .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+            });
+
+            modelBuilder.Entity("ShopSharp.Domain.Models.OrderProduct", b =>
+            {
+                b.HasOne("ShopSharp.Domain.Models.Order", "Order")
+                    .WithMany("OrderProducts")
+                    .HasForeignKey("OrderId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+
+                b.HasOne("ShopSharp.Domain.Models.Product", "Product")
+                    .WithMany("OrderProducts")
+                    .HasForeignKey("ProductId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+            });
+
+            modelBuilder.Entity("ShopSharp.Domain.Models.Stock", b =>
+            {
+                b.HasOne("ShopSharp.Domain.Models.Product", "Product")
+                    .WithMany("Stocks")
+                    .HasForeignKey("ProductId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
             });
