@@ -34,7 +34,7 @@ namespace ShopSharp.UI.Controllers
             return Ok(await new CreateProduct(_context).Exec(productDto));
         }
 
-        [HttpPut("products")]
+        [HttpPut("products/{id}")]
         public async Task<IActionResult> UpdateProduct(int id, [FromBody] ProductDto productDto)
         {
             return Ok(await new UpdateProduct(_context).Exec(id, productDto));

@@ -4,11 +4,13 @@
     ViewData["Title"] = "Home page";
 }
 
-<div>
-    @{
-        foreach (var product in Model.Products)
-        {
-            <p> @product.Name - @product.Description - @product.Value </p>
-        }
-    }
-</div>
+<table class="table">
+    <tr>
+        <th>Name</th>
+        <th>Value</th>
+    </tr>
+    <tr v-for="product in products">
+        <td>{{product.name}}</td>
+        <td>{{product.value}}</td>
+    </tr>
+</table>

@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>@ViewData["Title"] - ShopSharp.UI</title>
+    <link rel="stylesheet" href="~/lib/bulma-0.8.2/css/bulma.css"/>
+    <link rel="stylesheet" href="~/css/site.css"/>
+</head>
+<body>
+<h3 class="has-text-centered">Admin Panel</h3>
+
+<div class="container">
+    <div class="columns">
+        <div class="column is-3">
+            <div class="menu">
+                <p class="menu-label">Admin Menu</p>
+                <ul class="menu-list">
+                    <li>
+                        <a asp-page="/Admin/Index">Products</a>
+                    </li>
+                    <li>
+                        <a asp-page="/Admin/Orders">Orders</a>
+                    </li>
+                    <li>
+                        <a asp-page="/Admin/Stock">Stock</a>
+                    </li>
+                </ul>
+                <p class="menu-label"></p>
+                <ul class="menu-list">
+                    <li>
+                        <a asp-page="/Index">Back To Home</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="column is-9">
+            @RenderBody()
+        </div>
+    </div>
+</div>
+
+<script src="~/js/site.js" asp-append-version="true"></script>
+
+@RenderSection("Scripts", false)
+</body>
+</html>

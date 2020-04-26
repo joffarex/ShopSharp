@@ -14,13 +14,12 @@ namespace ShopSharp.Application.ProductsAdmin
             _context = context;
         }
 
-        public IEnumerable<ProductViewModel> Exec()
+        public IEnumerable<ProductsViewModel> Exec()
         {
-            return _context.Products.ToList().Select(x => new ProductViewModel
+            return _context.Products.ToList().Select(x => new ProductsViewModel
             {
                 Id = x.Id,
                 Name = x.Name,
-                Description = x.Description,
                 Value = $"$ {x.Value:N2}" // 69420.60 => $ 69,420.60
             });
         }
