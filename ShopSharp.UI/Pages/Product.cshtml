@@ -2,7 +2,7 @@
 @model ProductModel
 
 @{
-    Layout = null;
+    Layout = "Shared/_Layout";
 }
 
 <div>
@@ -10,12 +10,17 @@
     <p>@Model.Product.Description</p>
     <p>@Model.Product.Value</p>
     <div>
-        <label>Stock</label>
-        <select>
-            @foreach (var stock in Model.Product.Stocks)
-            {
-                <option value="@stock.Id">@stock.Description</option>
-            }
-        </select>
+        <form method="post">
+            <label>Stock</label>
+            <select asp-for="CartDto.StockId">
+                @foreach (var stock in Model.Product.Stocks)
+                {
+                    <option value="@stock.Id">@stock.Description</option>
+                }
+            </select>
+            <label>Quantity</label>
+            <input asp-for="CartDto.Quantity">
+            <button type="submit">Submit</button>
+        </form>
     </div>
 </div>

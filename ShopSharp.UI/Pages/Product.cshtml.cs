@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using ShopSharp.Application.Cart;
+using ShopSharp.Application.Cart.Dto;
 using ShopSharp.Application.Products;
 using ShopSharp.Application.Products.ViewModels;
 using ShopSharp.Database;
@@ -15,6 +17,8 @@ namespace ShopSharp.UI.Pages
             _context = context;
         }
 
+        [BindProperty] public CartDto CartDto { get; set; }
+
         public ProductViewModel Product { get; set; }
 
         public IActionResult OnGet(string name)
@@ -22,6 +26,13 @@ namespace ShopSharp.UI.Pages
             Product = new GetProduct(_context).Exec(name.Replace("-", " "));
             if (Product == null) return RedirectToPage("Index");
             return Page();
+        }
+
+        public IActionResult OnPost()
+        {
+            new AddToCart(HttpContext.Session).Exec(CartDto);
+
+            return RedirectToPage("Cart");
         }
     }
 }

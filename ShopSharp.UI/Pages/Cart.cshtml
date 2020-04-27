@@ -1,0 +1,17 @@
+﻿@page
+@model CartModel
+
+@{
+    Layout = "Shared/_Layout";
+}
+
+<div>
+    @foreach (var product in Model.Cart)
+    {
+        <p>@product.Name</p>
+        <p>@product.Value</p>
+        <p>@product.Quantity</p>
+        <p>@product.StockId</p>
+        <hr/>
+    }
+</div>
