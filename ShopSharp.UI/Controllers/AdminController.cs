@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using ShopSharp.Application.ProductsAdmin;
 using ShopSharp.Application.ProductsAdmin.Dto;
+using ShopSharp.Application.StockAdmin;
+using ShopSharp.Application.StockAdmin.Dto;
 using ShopSharp.Database;
 
 namespace ShopSharp.UI.Controllers
@@ -44,6 +46,31 @@ namespace ShopSharp.UI.Controllers
         public async Task<IActionResult> DeleteProduct(int id)
         {
             return Ok(await new DeleteProduct(_context).Exec(id));
+        }
+
+        // Stock
+        [HttpGet("stocks")]
+        public IActionResult GetStock()
+        {
+            return Ok(new GetStock(_context).Exec());
+        }
+
+        [HttpPost("stocks")]
+        public async Task<IActionResult> CreateStock([FromBody] StockDto stockDto)
+        {
+            return Ok(await new CreateStock(_context).Exec(stockDto));
+        }
+
+        [HttpPut("stocks")]
+        public async Task<IActionResult> UpdateStock([FromBody] UpdateStockDto updateStockDto)
+        {
+            return Ok(await new UpdateStock(_context).Exec(updateStockDto));
+        }
+
+        [HttpDelete("stocks/{id}")]
+        public async Task<IActionResult> DeleteStock(int id)
+        {
+            return Ok(await new DeleteStock(_context).Exec(id));
         }
     }
 }

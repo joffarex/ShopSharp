@@ -20,7 +20,9 @@ namespace ShopSharp.Application.StockAdmin
         {
             var stocks = updateStockDto.Stocks.Select(stock => new Stock
                 {
-                    Id = stock.Id, Description = stock.Description, Quantity = stock.Quantity,
+                    Id = stock.Id,
+                    Description = stock.Description,
+                    Quantity = stock.Quantity,
                     ProductId = stock.ProductId
                 })
                 .ToList();

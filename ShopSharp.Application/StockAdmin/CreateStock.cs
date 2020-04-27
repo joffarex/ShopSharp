@@ -32,8 +32,7 @@ namespace ShopSharp.Application.StockAdmin
             {
                 Id = stock.Id,
                 Description = stock.Description,
-                Quantity = stock.Quantity,
-                ProductId = stock.ProductId
+                Quantity = stock.Quantity
             };
         }
     }

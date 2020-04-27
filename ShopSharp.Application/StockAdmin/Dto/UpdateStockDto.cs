@@ -5,6 +5,6 @@ namespace ShopSharp.Application.StockAdmin.Dto
 {
     public class UpdateStockDto
     {
-        public IEnumerable<StockViewModel> Stocks { get; set; }
+        public IEnumerable<StockWithProductViewModel> Stocks { get; set; }
     }
 }

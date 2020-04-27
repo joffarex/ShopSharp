@@ -4,6 +4,6 @@ namespace ShopSharp.Application.StockAdmin.ViewModels
 {
     public class UpdateStockViewModel
     {
-        public IEnumerable<StockViewModel> Stocks { get; set; }
+        public IEnumerable<StockWithProductViewModel> Stocks { get; set; }
     }
 }
