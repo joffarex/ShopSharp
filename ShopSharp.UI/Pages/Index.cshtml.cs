@@ -16,7 +16,7 @@ namespace ShopSharp.UI.Pages
             _context = context;
         }
 
-        [BindProperty] public IEnumerable<ProductsViewModel> Products { get; private set; }
+        [BindProperty] public IEnumerable<ProductViewModel> Products { get; private set; }
 
         public void OnGet()
         {

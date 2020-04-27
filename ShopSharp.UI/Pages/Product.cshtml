@@ -1,0 +1,21 @@
+﻿@page "{name}"
+@model ProductModel
+
+@{
+    Layout = null;
+}
+
+<div>
+    <p>@Model.Product.Name</p>
+    <p>@Model.Product.Description</p>
+    <p>@Model.Product.Value</p>
+    <div>
+        <label>Stock</label>
+        <select>
+            @foreach (var stock in Model.Product.Stocks)
+            {
+                <option value="@stock.Id">@stock.Description</option>
+            }
+        </select>
+    </div>
+</div>

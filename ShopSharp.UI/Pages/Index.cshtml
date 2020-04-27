@@ -4,13 +4,14 @@
     ViewData["Title"] = "Home page";
 }
 
-<table class="table">
-    <tr>
-        <th>Name</th>
-        <th>Value</th>
-    </tr>
-    <tr v-for="product in products">
-        <td>{{product.name}}</td>
-        <td>{{product.value}}</td>
-    </tr>
-</table>
+<div>
+    @{
+        foreach (var product in Model.Products)
+        {
+            <a asp-page="Product" asp-route-name="@product.Name.Replace(" ", "-")">
+                @product.Name - @product.Description - @product.Value
+            </a>
+            <br/>
+        }
+    }
+</div>
