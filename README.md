@@ -1,3 +1,3 @@
 # shopsharp
 
-Online shop for sharp users, by sharp programmer
+Online shop for sharp users, from a sharp programmer ;););)
