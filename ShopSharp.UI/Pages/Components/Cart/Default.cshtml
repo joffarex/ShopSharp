@@ -1,0 +1,18 @@
+﻿@model IEnumerable<ShopSharp.Application.Cart.ViewModels.CartViewModel>
+
+@{
+
+}
+
+
+<div>
+    <h2>Big Cart Component</h2>
+    @foreach (var product in Model)
+    {
+        <p>@product.Name</p>
+        <p>@product.Value</p>
+        <p>@product.Quantity</p>
+        <p>@product.StockId</p>
+        <hr/>
+    }
+</div>

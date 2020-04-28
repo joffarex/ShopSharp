@@ -1,0 +1,43 @@
+﻿@page
+@model CustomerInformationModel
+
+<div>
+    <form method="post">
+        <div>
+            <label>FirstName</label>
+            <input asp-for="CustomerInformation.FirstName">
+            <span asp-validation-for="CustomerInformation.FirstName"></span>
+        </div>
+        <div>
+            <label>LastName</label>
+            <input asp-for="CustomerInformation.LastName">
+            <span asp-validation-for="CustomerInformation.LastName"></span>
+        </div>
+        <div>
+            <label>PhoneNumber</label>
+            <input asp-for="CustomerInformation.PhoneNumber">
+            <span asp-validation-for="CustomerInformation.PhoneNumber"></span>
+        </div>
+        <div>
+            <label>Email</label>
+            <input asp-for="CustomerInformation.Email">
+            <span asp-validation-for="CustomerInformation.Email"></span>
+        </div>
+        <div>
+            <label>Address</label>
+            <input asp-for="CustomerInformation.Address">
+            <span asp-validation-for="CustomerInformation.Address"></span>
+        </div>
+        <div>
+            <label>City</label>
+            <input asp-for="CustomerInformation.City">
+            <span asp-validation-for="CustomerInformation.City"></span>
+        </div>
+        <div>
+            <label>PostCode</label>
+            <input asp-for="CustomerInformation.PostCode">
+            <span asp-validation-for="CustomerInformation.PostCode"></span>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+</div>

@@ -1,20 +1,14 @@
-﻿using System.Collections.Generic;
-
-namespace ShopSharp.Domain.Models
+﻿namespace ShopSharp.Application.Cart.ViewModels
 {
-    public class Order
+    public class CustomerInformationViewModel
     {
-        public int Id { get; set; }
-        public string OrderRef { get; set; }
-
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
+
         public string Address { get; set; }
         public string City { get; set; }
         public string PostCode { get; set; }
-
-        public ICollection<OrderProduct> OrderProducts { get; set; }
     }
 }
