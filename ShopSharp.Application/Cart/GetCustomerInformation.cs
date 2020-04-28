@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using ShopSharp.Application.Cart.ViewModels;
+using ShopSharp.Domain.Models;
 
 namespace ShopSharp.Application.Cart
 {
@@ -19,7 +20,18 @@ namespace ShopSharp.Application.Cart
 
             if (string.IsNullOrEmpty(jsonCustomerInformation)) return null;
 
-            return JsonConvert.DeserializeObject<CustomerInformationViewModel>(jsonCustomerInformation);
+            var customerInformation = JsonConvert.DeserializeObject<CustomerInformation>(jsonCustomerInformation);
+
+            return new CustomerInformationViewModel
+            {
+                FirstName = customerInformation.FirstName,
+                LastName = customerInformation.LastName,
+                Email = customerInformation.Email,
+                PhoneNumber = customerInformation.PhoneNumber,
+                Address = customerInformation.Address,
+                City = customerInformation.City,
+                PostCode = customerInformation.PostCode
+            };
         }
     }
 }

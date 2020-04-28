@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
+        <UserSecretsId>3cc595a4-fa73-4b72-aa7a-99a52e502cef</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
@@ -10,6 +11,7 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.2"/>
+        <PackageReference Include="Stripe.net" Version="36.6.0"/>
     </ItemGroup>
 
     <ItemGroup>
