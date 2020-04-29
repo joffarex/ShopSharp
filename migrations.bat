@@ -1,0 +1,1 @@
+cd ShopSharp.Database && dotnet ef --startup-project ../ShopSharp.UI migrations add %1 && dotnet ef --startup-project ../ShopSharp.UI database update && cd ../
