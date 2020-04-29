@@ -320,6 +320,33 @@ namespace ShopSharp.Database.Migrations
                 b.ToTable("Stocks");
             });
 
+            modelBuilder.Entity("ShopSharp.Domain.Models.StockOnHold", b =>
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int")
+                    .HasAnnotation("SqlServer:ValueGenerationStrategy",
+                        SqlServerValueGenerationStrategy.IdentityColumn);
+
+                b.Property<DateTime>("ExpiryDate")
+                    .HasColumnType("datetime2");
+
+                b.Property<int>("Quantity")
+                    .HasColumnType("int");
+
+                b.Property<string>("SessionId")
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<int>("StockId")
+                    .HasColumnType("int");
+
+                b.HasKey("Id");
+
+                b.HasIndex("StockId");
+
+                b.ToTable("StocksOnHold");
+            });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
             {
                 b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -391,6 +418,15 @@ namespace ShopSharp.Database.Migrations
                 b.HasOne("ShopSharp.Domain.Models.Product", "Product")
                     .WithMany("Stocks")
                     .HasForeignKey("ProductId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+            });
+
+            modelBuilder.Entity("ShopSharp.Domain.Models.StockOnHold", b =>
+            {
+                b.HasOne("ShopSharp.Domain.Models.Stock", "Stock")
+                    .WithMany()
+                    .HasForeignKey("StockId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
             });

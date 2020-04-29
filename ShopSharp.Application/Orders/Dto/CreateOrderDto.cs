@@ -5,6 +5,7 @@ namespace ShopSharp.Application.Orders.Dto
 {
     public class CreateOrderDto
     {
+        public string SessionId { get; set; }
         public string StripeRef { get; set; }
 
         public string FirstName { get; set; }

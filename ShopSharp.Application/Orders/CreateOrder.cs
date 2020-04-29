@@ -18,17 +18,9 @@ namespace ShopSharp.Application.Orders
 
         public async Task<bool> Exec(CreateOrderDto createOrderDto)
         {
-            var stocksToUpdate = _context.Stocks.AsEnumerable()
-                .Where(
-                    x => createOrderDto.Stocks.Any(y => y.StockId == x.Id)
-                ).ToList();
+            var stockOnHold = _context.StocksOnHold.Where(x => x.SessionId == createOrderDto.SessionId).ToList();
 
-            foreach (var stock in stocksToUpdate)
-            {
-                var orderStock = createOrderDto.Stocks.FirstOrDefault(x => x.StockId == stock.Id);
-
-                if (orderStock != null) stock.Quantity -= orderStock.Quantity;
-            }
+            _context.StocksOnHold.RemoveRange(stockOnHold);
 
             var order = new Order
             {

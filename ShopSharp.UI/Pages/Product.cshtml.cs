@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ShopSharp.Application.Cart;
 using ShopSharp.Application.Cart.Dto;
@@ -21,18 +22,20 @@ namespace ShopSharp.UI.Pages
 
         public ProductViewModel Product { get; set; }
 
-        public IActionResult OnGet(string name)
+        public async Task<IActionResult> OnGet(string name)
         {
-            Product = new GetProduct(_context).Exec(name.Replace("-", " "));
+            Product = await new GetProduct(_context).Exec(name.Replace("-", " "));
             if (Product == null) return RedirectToPage("Index");
             return Page();
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPost()
         {
-            new AddToCart(HttpContext.Session).Exec(CartDto);
+            var stockAdded = await new AddToCart(HttpContext.Session, _context).Exec(CartDto);
 
-            return RedirectToPage("Cart");
+            if (stockAdded) return RedirectToPage("Cart");
+
+            return Page(); // TODO: add warning that stock is on hold 
         }
     }
 }

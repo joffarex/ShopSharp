@@ -56,8 +56,11 @@ namespace ShopSharp.UI.Pages.Checkout
                 Customer = customer.Id
             });
 
+            var sessionId = HttpContext.Session.Id;
+
             await new CreateOrder(_context).Exec(new CreateOrderDto
             {
+                SessionId = sessionId,
                 StripeRef = charge.Id,
                 FirstName = cartOrder.CustomerInformation.FirstName,
                 LastName = cartOrder.CustomerInformation.LastName,
