@@ -1,0 +1,20 @@
+﻿@page "{orderRef}"
+@model OrderModel
+
+@{
+    Layout = "Shared/_Layout";
+}
+
+<div>
+    <h1>
+        @Model.Order.OrderRef
+    </h1>
+
+    @foreach (var product in Model.Order.Products)
+    {
+        <div>
+            @product.Name - @product.Description - @product.Quantity - @product.Value
+        </div>
+    }
+    <p>Value: @Model.Order.TotalValue</p>
+</div>

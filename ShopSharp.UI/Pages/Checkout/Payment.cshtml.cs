@@ -9,6 +9,7 @@ using ShopSharp.Application.Orders.Dto;
 using ShopSharp.Application.Orders.ViewModels;
 using ShopSharp.Database;
 using Stripe;
+using GetOrder = ShopSharp.Application.Cart.GetOrder;
 
 namespace ShopSharp.UI.Pages.Checkout
 {
@@ -57,7 +58,7 @@ namespace ShopSharp.UI.Pages.Checkout
 
             await new CreateOrder(_context).Exec(new CreateOrderDto
             {
-                StripeRef = charge.OrderId,
+                StripeRef = charge.Id,
                 FirstName = cartOrder.CustomerInformation.FirstName,
                 LastName = cartOrder.CustomerInformation.LastName,
                 Email = cartOrder.CustomerInformation.Email,
