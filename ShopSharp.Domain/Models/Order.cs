@@ -16,6 +16,6 @@ namespace ShopSharp.Domain.Models
         public string City { get; set; }
         public string PostCode { get; set; }
 
-        public ICollection<OrderProduct> OrderProducts { get; set; }
+        public ICollection<OrderStock> OrderStocks { get; set; }
     }
 }

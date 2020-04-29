@@ -230,10 +230,25 @@ namespace ShopSharp.Database.Migrations
                 b.Property<string>("City")
                     .HasColumnType("nvarchar(max)");
 
+                b.Property<string>("Email")
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<string>("FirstName")
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<string>("LastName")
+                    .HasColumnType("nvarchar(max)");
+
                 b.Property<string>("OrderRef")
                     .HasColumnType("nvarchar(max)");
 
+                b.Property<string>("PhoneNumber")
+                    .HasColumnType("nvarchar(max)");
+
                 b.Property<string>("PostCode")
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<string>("StripeRef")
                     .HasColumnType("nvarchar(max)");
 
                 b.HasKey("Id");
@@ -241,19 +256,22 @@ namespace ShopSharp.Database.Migrations
                 b.ToTable("Orders");
             });
 
-            modelBuilder.Entity("ShopSharp.Domain.Models.OrderProduct", b =>
+            modelBuilder.Entity("ShopSharp.Domain.Models.OrderStock", b =>
             {
-                b.Property<int>("ProductId")
+                b.Property<int>("StockId")
                     .HasColumnType("int");
 
                 b.Property<int>("OrderId")
                     .HasColumnType("int");
 
-                b.HasKey("ProductId", "OrderId");
+                b.Property<int>("Quantity")
+                    .HasColumnType("int");
+
+                b.HasKey("StockId", "OrderId");
 
                 b.HasIndex("OrderId");
 
-                b.ToTable("OrderProducts");
+                b.ToTable("OrderStocks");
             });
 
             modelBuilder.Entity("ShopSharp.Domain.Models.Product", b =>
@@ -353,17 +371,17 @@ namespace ShopSharp.Database.Migrations
                     .IsRequired();
             });
 
-            modelBuilder.Entity("ShopSharp.Domain.Models.OrderProduct", b =>
+            modelBuilder.Entity("ShopSharp.Domain.Models.OrderStock", b =>
             {
                 b.HasOne("ShopSharp.Domain.Models.Order", "Order")
-                    .WithMany("OrderProducts")
+                    .WithMany("OrderStocks")
                     .HasForeignKey("OrderId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
 
-                b.HasOne("ShopSharp.Domain.Models.Product", "Product")
-                    .WithMany("OrderProducts")
-                    .HasForeignKey("ProductId")
+                b.HasOne("ShopSharp.Domain.Models.Stock", "Stock")
+                    .WithMany("OrderStocks")
+                    .HasForeignKey("StockId")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
             });

@@ -11,6 +11,5 @@ namespace ShopSharp.Domain.Models
         [Column(TypeName = "decimal(18,2)")] public decimal Value { get; set; }
 
         public ICollection<Stock> Stocks { get; set; }
-        public ICollection<OrderProduct> OrderProducts { get; set; }
     }
 }

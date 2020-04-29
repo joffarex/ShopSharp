@@ -1,4 +1,6 @@
-﻿namespace ShopSharp.Domain.Models
+﻿using System.Collections.Generic;
+
+namespace ShopSharp.Domain.Models
 {
     public class Stock
     {
@@ -8,5 +10,6 @@
 
         public int ProductId { get; set; }
         public Product Product { get; set; }
+        public ICollection<OrderStock> OrderStocks { get; set; }
     }
 }

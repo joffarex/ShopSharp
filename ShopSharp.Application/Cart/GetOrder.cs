@@ -31,7 +31,7 @@ namespace ShopSharp.Application.Cart
                 .Where(x => x.Id == product.StockId)
                 .Select(x => new OrderProductDto
                 {
-                    ProductId = x.ProductId,
+                    ProductId = x.Product.Id,
                     StockId = x.Id,
                     Value = (int) (x.Product.Value * 100),
                     Quantity = product.Quantity
