@@ -1,7 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
 using ShopSharp.Application.Cart;
+using ShopSharp.Application.Orders;
+using ShopSharp.Application.Orders.Dto;
+using ShopSharp.Application.Orders.ViewModels;
 using ShopSharp.Database;
 using Stripe;
 
@@ -29,7 +34,7 @@ namespace ShopSharp.UI.Pages.Checkout
             return Page();
         }
 
-        public IActionResult OnPost(string stripeEmail, string stripeToken)
+        public async Task<IActionResult> OnPost(string stripeEmail, string stripeToken)
         {
             var customers = new CustomerService();
             var charges = new ChargeService();
@@ -48,6 +53,24 @@ namespace ShopSharp.UI.Pages.Checkout
                 Description = "Shop Purchase",
                 Currency = "usd",
                 Customer = customer.Id
+            });
+
+            await new CreateOrder(_context).Exec(new CreateOrderDto
+            {
+                StripeRef = charge.OrderId,
+                FirstName = cartOrder.CustomerInformation.FirstName,
+                LastName = cartOrder.CustomerInformation.LastName,
+                Email = cartOrder.CustomerInformation.Email,
+                PhoneNumber = cartOrder.CustomerInformation.PhoneNumber,
+                Address = cartOrder.CustomerInformation.Address,
+                City = cartOrder.CustomerInformation.City,
+                PostCode = cartOrder.CustomerInformation.PostCode,
+
+                Stocks = cartOrder.Products.Select(x => new StockViewModel
+                {
+                    StockId = x.StockId,
+                    Quantity = x.Quantity
+                }).ToList()
             });
 
             return RedirectToPage("/Index");
