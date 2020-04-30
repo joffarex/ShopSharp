@@ -1,10 +1,12 @@
-﻿<!DOCTYPE html>
+﻿@inject IAuthorizationService AuthorizationService
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] - ShopSharp.UI</title>
-    <link rel="stylesheet" href="~/lib/bulma-0.8.2/css/bulma.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.css">
 </head>
 <body>
 <h3 class="title has-text-centered">Admin Panel</h3>
@@ -13,18 +15,30 @@
     <div class="columns">
         <div class="column is-3">
             <div class="menu">
-                <p class="menu-label">Admin Menu</p>
-                <ul class="menu-list">
-                    <li>
-                        <a asp-page="/Admin/Index">Products</a>
-                    </li>
-                    <li>
-                        <a asp-page="/Admin/Orders">Orders</a>
-                    </li>
-                    <li>
-                        <a asp-page="/Admin/Stock">Stock</a>
-                    </li>
-                </ul>
+                @if ((await AuthorizationService.AuthorizeAsync(User, "Manager")).Succeeded)
+                {
+                    <p class="menu-label">Store Menu</p>
+                    <ul class="menu-list">
+                        <li>
+                            <a asp-page="/Admin/Index">Products</a>
+                        </li>
+                        <li>
+                            <a asp-page="/Admin/Orders">Orders</a>
+                        </li>
+                        <li>
+                            <a asp-page="/Admin/Stock">Stock</a>
+                        </li>
+                    </ul>
+                }
+                @if ((await AuthorizationService.AuthorizeAsync(User, "Admin")).Succeeded)
+                {
+                    <p class="menu-label">Admin Menu</p>
+                    <ul class="menu-list">
+                        <li>
+                            <a asp-page="/Admin/ConfigureUsers">Configure Users</a>
+                        </li>
+                    </ul>
+                }
                 <p class="menu-label"></p>
                 <ul class="menu-list">
                     <li>

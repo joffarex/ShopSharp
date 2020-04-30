@@ -1,0 +1,16 @@
+﻿@page
+@model ConfigureUsersModel
+
+@{
+    Layout = "_AdminLayout";
+}
+
+<div id="users" class="container">
+    <input v-model="username">
+    <button @@click="createUser">Create</button>
+</div>
+
+
+@section scripts{
+    <script src="~/js/admin/users.js"></script>
+}

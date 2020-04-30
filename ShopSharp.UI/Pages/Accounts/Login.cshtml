@@ -1,0 +1,13 @@
+﻿@page
+@model LoginModel
+
+@{
+    Layout = "Shared/_Layout";
+}
+
+<form method="post">
+    <input asp-for="LoginDto.Username">
+    <input asp-for="LoginDto.Password">
+
+    <input type="submit" value="Sign In">
+</form>

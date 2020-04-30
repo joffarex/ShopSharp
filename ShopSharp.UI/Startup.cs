@@ -1,11 +1,13 @@
 using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
+using ShopSharp.Application.UsersAdmin;
 using ShopSharp.Database;
 using Stripe;
 
@@ -26,11 +28,35 @@ namespace ShopSharp.UI
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration["DefaultConnection"]));
 
+            services.AddIdentity<IdentityUser, IdentityRole>(options =>
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 6;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+            }).AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.ConfigureApplicationCookie(options => { options.LoginPath = "/Accounts/Login"; });
+
+            services.AddAuthorization(options =>
+            {
+                // how should authorized user behave
+                options.AddPolicy("Admin", policy => policy.RequireClaim("Role", "Admin"));
+                // options.AddPolicy("Manager", policy => policy.RequireClaim("Role", "Manager"));
+                options.AddPolicy("Manager", policy => policy.RequireAssertion(context =>
+                    context.User.HasClaim("Role", "Manager") || context.User.HasClaim("Role", "Admin")
+                ));
+            });
+
             services.AddControllersWithViews()
                 .AddNewtonsoftJson(options =>
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore
                 );
-            services.AddRazorPages();
+            services.AddRazorPages().AddRazorPagesOptions(options =>
+            {
+                options.Conventions.AuthorizeFolder("/Admin");
+                options.Conventions.AuthorizePage("/Admin/ConfigureUsers", "Admin");
+            });
 
             services.AddSession(options =>
             {
@@ -39,6 +65,8 @@ namespace ShopSharp.UI
             });
 
             StripeConfiguration.ApiKey = Configuration.GetSection("Stripe")["SecretKey"];
+
+            services.AddTransient<CreateUser>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,12 +90,16 @@ namespace ShopSharp.UI
 
             app.UseSession();
 
+            // Who are you?
+            app.UseAuthentication();
+            // What access do you have? Are you allowed?
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
+                endpoints.MapDefaultControllerRoute();
             });
         }
     }
