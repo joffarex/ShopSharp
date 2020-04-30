@@ -16,10 +16,12 @@ namespace ShopSharp.UI.Pages.Checkout
     public class PaymentModel : PageModel
     {
         private readonly ApplicationDbContext _context;
+        private readonly CreateOrder _createOrder;
 
-        public PaymentModel(IConfiguration configuration, ApplicationDbContext context)
+        public PaymentModel(IConfiguration configuration, ApplicationDbContext context, CreateOrder createOrder)
         {
             _context = context;
+            _createOrder = createOrder;
             PublishableKey = configuration["Stripe:PublishableKey"];
         }
 
@@ -58,7 +60,7 @@ namespace ShopSharp.UI.Pages.Checkout
 
             var sessionId = HttpContext.Session.Id;
 
-            await new CreateOrder(_context).Exec(new CreateOrderDto
+            await _createOrder.ExecAsync(new CreateOrderDto
             {
                 SessionId = sessionId,
                 StripeRef = charge.Id,

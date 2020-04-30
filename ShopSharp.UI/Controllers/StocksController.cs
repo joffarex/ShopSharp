@@ -19,27 +19,29 @@ namespace ShopSharp.UI.Controllers
         }
 
         [HttpGet("")]
-        public IActionResult GetStock()
+        public IActionResult GetStock([FromServices] GetStock getStock)
         {
-            return Ok(new GetStock(_context).Exec());
+            return Ok(getStock.Exec());
         }
 
         [HttpPost("")]
-        public async Task<IActionResult> CreateStock([FromBody] StockDto stockDto)
+        public async Task<IActionResult> CreateStock([FromBody] StockDto stockDto,
+            [FromServices] CreateStock createStock)
         {
-            return Ok(await new CreateStock(_context).Exec(stockDto));
+            return Ok(await createStock.ExecAsync(stockDto));
         }
 
         [HttpPut("")]
-        public async Task<IActionResult> UpdateStock([FromBody] UpdateStockDto updateStockDto)
+        public async Task<IActionResult> UpdateStock([FromBody] UpdateStockDto updateStockDto,
+            [FromServices] UpdateStock updateStock)
         {
-            return Ok(await new UpdateStock(_context).Exec(updateStockDto));
+            return Ok(await updateStock.ExecAsync(updateStockDto));
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteStock(int id)
+        public async Task<IActionResult> DeleteStock(int id, [FromServices] DeleteStock deleteStock)
         {
-            return Ok(await new DeleteStock(_context).Exec(id));
+            return Ok(await deleteStock.ExecAsync(id));
         }
     }
 }

@@ -13,7 +13,7 @@ namespace ShopSharp.Application.OrdersAdmin
             _context = context;
         }
 
-        public async Task<bool> Exec(int id)
+        public async Task<bool> ExecAsync(int id)
         {
             var order = _context.Orders.FirstOrDefault(x => x.Id == id);
 

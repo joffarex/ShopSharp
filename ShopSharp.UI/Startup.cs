@@ -7,7 +7,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
-using ShopSharp.Application.UsersAdmin;
 using ShopSharp.Database;
 using Stripe;
 
@@ -66,7 +65,7 @@ namespace ShopSharp.UI
 
             StripeConfiguration.ApiKey = Configuration.GetSection("Stripe")["SecretKey"];
 
-            services.AddTransient<CreateUser>();
+            services.AddApplicationServices();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -14,7 +14,7 @@ namespace ShopSharp.Application.StockAdmin
             _context = context;
         }
 
-        public async Task<bool> Exec(int id)
+        public async Task<bool> ExecAsync(int id)
         {
             var stock = _context.Stocks.FirstOrDefault(x => x.Id == id);
             _context.Stocks.Remove(stock ?? throw new Exception("Stock not found"));

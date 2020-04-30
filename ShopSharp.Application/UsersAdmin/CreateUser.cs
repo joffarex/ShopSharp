@@ -14,7 +14,7 @@ namespace ShopSharp.Application.UsersAdmin
             _userManager = userManager;
         }
 
-        public async Task<bool> Exec(UserDto userDto)
+        public async Task<bool> ExecAsync(UserDto userDto)
         {
             var managerUser = new IdentityUser
             {

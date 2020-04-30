@@ -3,24 +3,23 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ShopSharp.Application.Products;
 using ShopSharp.Application.Products.ViewModels;
-using ShopSharp.Database;
 
 namespace ShopSharp.UI.Pages
 {
     public class IndexModel : PageModel
     {
-        private readonly ApplicationDbContext _context;
+        private readonly GetProducts _getProducts;
 
-        public IndexModel(ApplicationDbContext context)
+        public IndexModel(GetProducts getProducts)
         {
-            _context = context;
+            _getProducts = getProducts;
         }
 
         [BindProperty] public IEnumerable<ProductViewModel> Products { get; private set; }
 
         public void OnGet()
         {
-            Products = new GetProducts(_context).Exec();
+            Products = _getProducts.Exec();
         }
     }
 }

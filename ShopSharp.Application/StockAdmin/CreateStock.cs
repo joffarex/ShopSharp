@@ -15,7 +15,7 @@ namespace ShopSharp.Application.StockAdmin
             _context = context;
         }
 
-        public async Task<StockViewModel> Exec(StockDto stockDto)
+        public async Task<StockViewModel> ExecAsync(StockDto stockDto)
         {
             var stock = new Stock
             {

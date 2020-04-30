@@ -15,7 +15,7 @@ namespace ShopSharp.Application.ProductsAdmin
             _context = context;
         }
 
-        public async Task<ProductViewModel> Exec(ProductDto productDto)
+        public async Task<ProductViewModel> ExecAsync(ProductDto productDto)
         {
             var product = new Product
             {

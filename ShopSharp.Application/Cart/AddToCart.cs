@@ -21,7 +21,7 @@ namespace ShopSharp.Application.Cart
             _context = context;
         }
 
-        public async Task<bool> Exec(CartDto cartDto)
+        public async Task<bool> ExecAsync(CartDto cartDto)
         {
             var stockOnHold = _context.StocksOnHold.Where(x => x.SessionId == _session.Id).ToList();
             var stockToHold = _context.Stocks.Where(x => x.Id == cartDto.StockId).FirstOrDefault();

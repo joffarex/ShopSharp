@@ -16,7 +16,7 @@ namespace ShopSharp.Application.StockAdmin
             _context = context;
         }
 
-        public async Task<UpdateStockViewModel> Exec(UpdateStockDto updateStockDto)
+        public async Task<UpdateStockViewModel> ExecAsync(UpdateStockDto updateStockDto)
         {
             var stocks = updateStockDto.Stocks.Select(stock => new Stock
                 {

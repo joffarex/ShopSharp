@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ShopSharp.Application.OrdersAdmin;
-using ShopSharp.Database;
 
 namespace ShopSharp.UI.Controllers
 {
@@ -10,29 +9,22 @@ namespace ShopSharp.UI.Controllers
     [Authorize(Policy = "Manager")]
     public class OrdersController : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public OrdersController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
-
         [HttpGet("")]
-        public IActionResult GetOrders(int status)
+        public IActionResult GetOrders(int status, [FromServices] GetOrders getOrders)
         {
-            return Ok(new GetOrders(_context).Exec(status));
+            return Ok(getOrders.Exec(status));
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetOrder(int id)
+        public IActionResult GetOrder(int id, [FromServices] GetOrder getOrder)
         {
-            return Ok(new GetOrder(_context).Exec(id));
+            return Ok(getOrder.Exec(id));
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateOrder(int id)
+        public async Task<IActionResult> UpdateOrder(int id, [FromServices] UpdateOrder updateOrder)
         {
-            return Ok(await new UpdateOrder(_context).Exec(id));
+            return Ok(await updateOrder.ExecAsync(id));
         }
     }
 }

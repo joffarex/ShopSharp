@@ -16,7 +16,7 @@ namespace ShopSharp.Application.Orders
             _context = context;
         }
 
-        public async Task<bool> Exec(CreateOrderDto createOrderDto)
+        public async Task<bool> ExecAsync(CreateOrderDto createOrderDto)
         {
             var stockOnHold = _context.StocksOnHold.Where(x => x.SessionId == createOrderDto.SessionId).ToList();
 

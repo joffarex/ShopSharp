@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ShopSharp.Application.ProductsAdmin;
 using ShopSharp.Application.ProductsAdmin.Dto;
-using ShopSharp.Database;
 
 namespace ShopSharp.UI.Controllers
 {
@@ -11,41 +10,36 @@ namespace ShopSharp.UI.Controllers
     [Authorize(Policy = "Manager")]
     public class ProductsController : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public ProductsController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
-
         [HttpGet("")]
-        public IActionResult GetProducts()
+        public IActionResult GetProducts([FromServices] GetProducts getProducts)
         {
-            return Ok(new GetProducts(_context).Exec());
+            return Ok(getProducts.Exec());
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetProduct(int id)
+        public IActionResult GetProduct(int id, [FromServices] GetProduct getProduct)
         {
-            return Ok(new GetProduct(_context).Exec(id));
+            return Ok(getProduct.Exec(id));
         }
 
         [HttpPost("")]
-        public async Task<IActionResult> CreateProduct([FromBody] ProductDto productDto)
+        public async Task<IActionResult> CreateProduct([FromBody] ProductDto productDto,
+            [FromServices] CreateProduct createProduct)
         {
-            return Ok(await new CreateProduct(_context).Exec(productDto));
+            return Ok(await createProduct.ExecAsync(productDto));
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProduct(int id, [FromBody] ProductDto productDto)
+        public async Task<IActionResult> UpdateProduct(int id, [FromBody] ProductDto productDto,
+            [FromServices] UpdateProduct updateProduct)
         {
-            return Ok(await new UpdateProduct(_context).Exec(id, productDto));
+            return Ok(await updateProduct.ExecAsync(id, productDto));
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProduct(int id)
+        public async Task<IActionResult> DeleteProduct(int id, [FromServices] DeleteProduct deleteProduct)
         {
-            return Ok(await new DeleteProduct(_context).Exec(id));
+            return Ok(await deleteProduct.ExecAsync(id));
         }
     }
 }

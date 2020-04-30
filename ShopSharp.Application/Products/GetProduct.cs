@@ -16,7 +16,7 @@ namespace ShopSharp.Application.Products
             _context = context;
         }
 
-        public async Task<ProductViewModel> Exec(string name)
+        public async Task<ProductViewModel> ExecAsync(string name)
         {
             var stocksOnHold = _context.StocksOnHold.AsEnumerable()
                 .Where(x => x.ExpiryDate < DateTime.Now).ToList();

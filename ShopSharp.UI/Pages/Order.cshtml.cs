@@ -2,24 +2,23 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ShopSharp.Application.Orders;
 using ShopSharp.Application.Orders.ViewModels;
-using ShopSharp.Database;
 
 namespace ShopSharp.UI.Pages
 {
     public class OrderModel : PageModel
     {
-        private readonly ApplicationDbContext _context;
+        private readonly GetOrder _getOrder;
 
-        public OrderModel(ApplicationDbContext context)
+        public OrderModel(GetOrder getOrder)
         {
-            _context = context;
+            _getOrder = getOrder;
         }
 
         public OrderViewModel Order { get; set; }
 
         public IActionResult OnGet(string orderRef)
         {
-            Order = new GetOrder(_context).Exec(orderRef);
+            Order = _getOrder.Exec(orderRef);
 
             if (Order == null) return RedirectToPage("/Index");
 

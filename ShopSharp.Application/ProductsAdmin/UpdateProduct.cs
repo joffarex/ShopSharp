@@ -16,7 +16,7 @@ namespace ShopSharp.Application.ProductsAdmin
             _context = context;
         }
 
-        public async Task<ProductViewModel> Exec(int id, ProductDto productDto)
+        public async Task<ProductViewModel> ExecAsync(int id, ProductDto productDto)
         {
             var product = _context.Products.FirstOrDefault(x => x.Id == id);
 
