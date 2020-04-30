@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ShopSharp.Application.OrdersAdmin;
 using ShopSharp.Database;
 
 namespace ShopSharp.UI.Controllers
@@ -15,13 +17,22 @@ namespace ShopSharp.UI.Controllers
             _context = context;
         }
 
-        // [HttpGet("")]
-        // public IActionResult GetOrders(int status) => Ok(new GerOrders(_context).Exec(status));
-        //
-        // [HttpGet("{id}")]
-        // public IActionResult GetOrder(int id) => Ok(new GerOrders(_context).Exec(id));
-        //
-        // [HttpPut("{id}")]
-        // public async Task<IActionResult> UpdateOrder(int id) => Ok((await new UpdateOrder(_context).Exec(id)));
+        [HttpGet("")]
+        public IActionResult GetOrders(int status)
+        {
+            return Ok(new GetOrders(_context).Exec(status));
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetOrder(int id)
+        {
+            return Ok(new GetOrder(_context).Exec(id));
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateOrder(int id)
+        {
+            return Ok(await new UpdateOrder(_context).Exec(id));
+        }
     }
 }

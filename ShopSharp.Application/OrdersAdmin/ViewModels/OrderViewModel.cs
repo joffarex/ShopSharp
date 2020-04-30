@@ -1,14 +1,11 @@
 ﻿using System.Collections.Generic;
-using ShopSharp.Domain.Enums;
 
-namespace ShopSharp.Domain.Models
+namespace ShopSharp.Application.OrdersAdmin.ViewModels
 {
-    public class Order
+    public class OrderViewModel
     {
         public int Id { get; set; }
         public string OrderRef { get; set; }
-        public string StripeRef { get; set; }
-
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
@@ -17,8 +14,8 @@ namespace ShopSharp.Domain.Models
         public string City { get; set; }
         public string PostCode { get; set; }
 
-        public OrderStatus Status { get; set; }
+        public IEnumerable<ProductViewModel> Products { get; set; }
 
-        public ICollection<OrderStock> OrderStocks { get; set; }
+        public string TotalValue { get; set; }
     }
 }

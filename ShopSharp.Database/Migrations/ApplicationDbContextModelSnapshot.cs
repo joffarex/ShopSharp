@@ -248,6 +248,9 @@ namespace ShopSharp.Database.Migrations
                 b.Property<string>("PostCode")
                     .HasColumnType("nvarchar(max)");
 
+                b.Property<int>("Status")
+                    .HasColumnType("int");
+
                 b.Property<string>("StripeRef")
                     .HasColumnType("nvarchar(max)");
 
