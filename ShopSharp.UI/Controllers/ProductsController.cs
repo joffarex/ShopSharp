@@ -1,76 +1,51 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ShopSharp.Application.ProductsAdmin;
 using ShopSharp.Application.ProductsAdmin.Dto;
-using ShopSharp.Application.StockAdmin;
-using ShopSharp.Application.StockAdmin.Dto;
 using ShopSharp.Database;
 
 namespace ShopSharp.UI.Controllers
 {
     [Route("[controller]")]
-    public class AdminController : Controller
+    [Authorize(Policy = "Manager")]
+    public class ProductsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public AdminController(ApplicationDbContext context)
+        public ProductsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        [HttpGet("products")]
+        [HttpGet("")]
         public IActionResult GetProducts()
         {
             return Ok(new GetProducts(_context).Exec());
         }
 
-        [HttpGet("products/{id}")]
+        [HttpGet("{id}")]
         public IActionResult GetProduct(int id)
         {
             return Ok(new GetProduct(_context).Exec(id));
         }
 
-        [HttpPost("products")]
+        [HttpPost("")]
         public async Task<IActionResult> CreateProduct([FromBody] ProductDto productDto)
         {
             return Ok(await new CreateProduct(_context).Exec(productDto));
         }
 
-        [HttpPut("products/{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateProduct(int id, [FromBody] ProductDto productDto)
         {
             return Ok(await new UpdateProduct(_context).Exec(id, productDto));
         }
 
-        [HttpDelete("products/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
             return Ok(await new DeleteProduct(_context).Exec(id));
-        }
-
-        // Stock
-        [HttpGet("stocks")]
-        public IActionResult GetStock()
-        {
-            return Ok(new GetStock(_context).Exec());
-        }
-
-        [HttpPost("stocks")]
-        public async Task<IActionResult> CreateStock([FromBody] StockDto stockDto)
-        {
-            return Ok(await new CreateStock(_context).Exec(stockDto));
-        }
-
-        [HttpPut("stocks")]
-        public async Task<IActionResult> UpdateStock([FromBody] UpdateStockDto updateStockDto)
-        {
-            return Ok(await new UpdateStock(_context).Exec(updateStockDto));
-        }
-
-        [HttpDelete("stocks/{id}")]
-        public async Task<IActionResult> DeleteStock(int id)
-        {
-            return Ok(await new DeleteStock(_context).Exec(id));
         }
     }
 }
