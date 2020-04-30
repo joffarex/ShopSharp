@@ -5,9 +5,27 @@
     Layout = "Shared/_Layout";
 }
 
-<form method="post">
-    <input asp-for="LoginDto.Username">
-    <input asp-for="LoginDto.Password">
+<div class="section">
+    <div class="columns">
+        <div class="column is-6 is-offset-3">
 
-    <input type="submit" value="Sign In">
-</form>
+
+            <form method="post">
+                <div class="field">
+                    <div class="control">
+                        <label class="label">Username</label> <input class="input" asp-for="LoginDto.Username">
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        <label class="label">Password</label> <input class="input" asp-for="LoginDto.Password">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <button class="button is-success" type="submit">Sign In</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -33,7 +33,7 @@ namespace ShopSharp.Application.ProductsAdmin
                 Id = product.Id,
                 Name = product.Name,
                 Description = product.Description,
-                Value = $"$ {product.Value:N2}"
+                Value = $"${product.Value:N2}"
             };
         }
     }

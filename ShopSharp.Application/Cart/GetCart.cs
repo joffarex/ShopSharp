@@ -33,7 +33,8 @@ namespace ShopSharp.Application.Cart
                 .Select(x => new CartViewModel
                 {
                     Name = x.Product.Name,
-                    Value = $"$ {x.Product.Value:N2}",
+                    Value = $"${x.Product.Value:N2}",
+                    RealValue = x.Product.Value,
                     StockId = product.StockId,
                     Quantity = product.Quantity
                 }).FirstOrDefault()

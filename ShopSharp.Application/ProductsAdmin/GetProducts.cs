@@ -20,7 +20,7 @@ namespace ShopSharp.Application.ProductsAdmin
             {
                 Id = x.Id,
                 Name = x.Name,
-                Value = $"$ {x.Value:N2}" // 69420.60 => $ 69,420.60
+                Value = $"${x.Value:N2}" // 69420.60 => $ 69,420.60
             });
         }
     }

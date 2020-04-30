@@ -5,50 +5,73 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>@ViewData["Title"] - ShopSharp.UI</title>
+    <title>@ViewData["Title"] - Admin Panel</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.css">
 </head>
 <body>
-<h3 class="title has-text-centered">Admin Panel</h3>
+<nav class="navbar is-black" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <a class="navbar-item" asp-page="/Index">
+            <p class="title has-text-primary" style="padding-bottom: 5px;">Admin Panel</p>
+        </a>
+
+        <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+    </div>
+
+    <div id="navbarBasicExample" class="navbar-menu">
+        <div class="navbar-end">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <a class="navbar-item" asp-area="" asp-controller="Account" asp-action="Logout">Sign Out</a>
+            }
+        </div>
+    </div>
+</nav>
 
 <div class="container">
-    <div class="columns">
-        <div class="column is-3">
-            <div class="menu">
-                @if ((await AuthorizationService.AuthorizeAsync(User, "Manager")).Succeeded)
-                {
-                    <p class="menu-label">Store Menu</p>
+    <div class="section">
+        <div class="columns">
+            <div class="column is-3">
+                <div class="menu">
+                    @if ((await AuthorizationService.AuthorizeAsync(User, "Manager")).Succeeded)
+                    {
+                        <p class="menu-label has-text-primary">Store Menu</p>
+                        <ul class="menu-list">
+                            <li>
+                                <a asp-page="/Admin/Index">Products</a>
+                            </li>
+                            <li>
+                                <a asp-page="/Admin/OrderManagement">OrderManagement</a>
+                            </li>
+                            <li>
+                                <a asp-page="/Admin/Stock">Stock</a>
+                            </li>
+                        </ul>
+                    }
+                    @if ((await AuthorizationService.AuthorizeAsync(User, "Admin")).Succeeded)
+                    {
+                        <p class="menu-label has-text-primary">Admin Menu</p>
+                        <ul class="menu-list">
+                            <li>
+                                <a asp-page="/Admin/ConfigureUsers">Configure Users</a>
+                            </li>
+                        </ul>
+                    }
+                    <p class="menu-label has-text-primary"></p>
                     <ul class="menu-list">
                         <li>
-                            <a asp-page="/Admin/Index">Products</a>
-                        </li>
-                        <li>
-                            <a asp-page="/Admin/OrderManagement">OrderManagement</a>
-                        </li>
-                        <li>
-                            <a asp-page="/Admin/Stock">Stock</a>
+                            <a asp-page="/Index">Back To Home</a>
                         </li>
                     </ul>
-                }
-                @if ((await AuthorizationService.AuthorizeAsync(User, "Admin")).Succeeded)
-                {
-                    <p class="menu-label">Admin Menu</p>
-                    <ul class="menu-list">
-                        <li>
-                            <a asp-page="/Admin/ConfigureUsers">Configure Users</a>
-                        </li>
-                    </ul>
-                }
-                <p class="menu-label"></p>
-                <ul class="menu-list">
-                    <li>
-                        <a asp-page="/Index">Back To Home</a>
-                    </li>
-                </ul>
+                </div>
             </div>
-        </div>
-        <div class="column is-9">
-            @RenderBody()
+            <div class="column is-9">
+                @RenderBody()
+            </div>
         </div>
     </div>
 </div>

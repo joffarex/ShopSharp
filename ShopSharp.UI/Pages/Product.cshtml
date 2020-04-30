@@ -1,23 +1,75 @@
 ﻿@page "{name}"
 @model ProductModel
 
-<div>
-    <p>@Model.Product.Name</p>
-    <p>@Model.Product.Description</p>
-    <p>@Model.Product.Value</p>
-    <div>
-        <form method="post">
-            <label>Stock</label>
-            <select asp-for="CartDto.StockId">
-                @foreach (var stock in Model.Product.Stocks)
-                {
-                    <option value="@stock.Id">@stock.Description</option>
-                }
-            </select>
-            <label>Quantity</label>
-            <input asp-for="CartDto.Quantity">
-            <button type="submit">Submit</button>
-        </form>
+<div class="hero">
+    <div class="hero-body">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-6">
+                    <figure class="image">
+                        <img src="~/images/product-image.jpg" alt="Product image"/>
+                    </figure>
+                </div>
+                <div class="column is-6">
+                    <section class="content">
+                        <p class="title has-text-primary">@Model.Product.Name</p>
+                        <p class="subtitle">@Model.Product.Description</p>
+
+                        <p>
+                            Proin tempor ex sit amet odio semper, ut tempor lectus congue. Nunc commodo, justo at ultricies tincidunt, velit libero lobortis tellus, ut vehicula mi odio sed turpis. Aliquam erat nisi, aliquam a quam at, sodales sollicitudin dolor. Duis mauris eros, sodales nec lorem quis, maximus vehicula nibh. Fusce ac dolor sagittis, mattis dolor non, sollicitudin tellus. Nam porta nunc a nisl cursus, nec congue libero imperdiet. In felis velit, pulvinar non elit ut, porttitor dictum risus. In at risus metus. Nunc in mollis sem, sed pharetra quam. Pellentesque ut felis feugiat, tristique massa vel, commodo augue. Morbi tempor mollis sapien, ac condimentum elit gravida vel. Ut imperdiet, est sed laoreet faucibus, nulla ipsum posuere dui, sit amet congue odio risus ut massa.
+                        </p>
+
+                        <footer>
+                            <form method="post">
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">Size</label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field is-narrow">
+                                            <div class="control">
+                                                <div class="select is-fullwidth">
+                                                    <select asp-for="CartDto.StockId">
+                                                        @foreach (var stock in Model.Product.Stocks)
+                                                        {
+                                                            <option value="@stock.Id">@stock.Description</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                        <label class="label">Quantity</label>
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field is-narrow">
+                                            <div class="control">
+                                                <input class="input" asp-for="CartDto.Quantity" value="1">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="field is-horizontal">
+                                    <div class="field-label is-normal">
+                                    </div>
+                                    <div class="field-body">
+                                        <div class="field is-narrow">
+                                            <div class="control">
+                                                <button class="button is-success" type="submit">Submit</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </footer>
+                    </section>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-<vc:cart view="Small"></vc:cart>

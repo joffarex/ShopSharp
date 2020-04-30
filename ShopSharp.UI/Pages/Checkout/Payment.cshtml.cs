@@ -26,11 +26,13 @@ namespace ShopSharp.UI.Pages.Checkout
         }
 
         public string PublishableKey { get; }
-
+        public string TotalValue { get; set; }
 
         public IActionResult OnGet()
         {
             var information = new GetCustomerInformation(HttpContext.Session).Exec();
+            var totalValue = new GetCart(HttpContext.Session, _context).Exec().Sum(x => x.RealValue * x.Quantity);
+            TotalValue = $"${totalValue}";
 
             if (information == null) return RedirectToPage("/Checkout/CustomerInformation");
 

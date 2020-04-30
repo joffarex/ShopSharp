@@ -4,15 +4,31 @@
     ViewData["Title"] = "Home page";
 }
 
-<div>
-    @{
-        foreach (var product in Model.Products)
-        {
-            <a asp-page="Product" asp-route-name="@product.Name.Replace(" ", "-")">
-                @product.Name - @product.Description - @product.Value
-            </a>
-            <br/>
+<div class="section">
+    <div class="columns is-multiline">
+        @{
+            foreach (var product in Model.Products)
+            {
+                <div class="column is-3-desktop is-4-tablet is-6-mobile">
+                    <a asp-page="Product" asp-route-name="@product.Name.Replace(" ", "-")">
+                        <div class="card">
+                            <div class="card-image">
+                                <figure class="image is-4by3">
+                                    <img src="~/images/product-image.jpg" alt="Product image">
+                                </figure>
+                            </div>
+                            <div class="card-content">
+                                <p class="title is-size-5"><span class="has-text-primary">@product.Name</span> - @product.Value</p>
+                                <p class="subtitle">@product.Description</p>
+
+                                <div class="content">
+
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
         }
-    }
+    </div>
 </div>
-<vc:cart view="Small"></vc:cart>
