@@ -21,9 +21,30 @@
                                 <p class="title is-size-5"><span class="has-text-primary">@product.Name</span> - @product.Value</p>
                                 <p class="subtitle">@product.Description</p>
 
-                                <div class="content">
+                                @{
+                                    var cssClass = "";
+                                    var message = "";
 
-                                </div>
+                                    if (product.StockCount == 0)
+                                    {
+                                        cssClass = "is-danger";
+                                        message = "Out of Stock";
+                                    }
+                                    else if (product.StockCount <= 10)
+                                    {
+                                        cssClass = "is-warning";
+                                        message = "Low on Stock";
+                                    }
+                                }
+
+                                @{
+                                    if (product.StockCount <= 10)
+                                    {
+                                        <div class="notification is-paddingless has-text-centered @cssClass">
+                                            @message
+                                        </div>
+                                    }
+                                }
                             </div>
                         </div>
                     </a>

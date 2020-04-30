@@ -36,6 +36,10 @@ namespace ShopSharp.UI.Pages.Checkout
 
             if (information == null) return RedirectToPage("/Checkout/CustomerInformation");
 
+            var cart = new GetCart(HttpContext.Session, _context).Exec();
+
+            if (cart.Count() == 0) return RedirectToPage("/Cart");
+
             return Page();
         }
 

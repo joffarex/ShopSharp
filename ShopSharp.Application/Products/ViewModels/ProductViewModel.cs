@@ -7,6 +7,8 @@ namespace ShopSharp.Application.Products.ViewModels
         public string Name { get; set; }
         public string Description { get; set; }
         public string Value { get; set; }
+
+        public int StockCount { get; set; }
         public IEnumerable<StockViewModel> Stocks { get; set; }
     }
 }

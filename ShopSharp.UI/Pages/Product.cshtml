@@ -29,10 +29,12 @@
                                         <div class="field is-narrow">
                                             <div class="control">
                                                 <div class="select is-fullwidth">
-                                                    <select asp-for="CartDto.StockId">
+                                                    <select asp-for="CartDto.StockId" onchange="toggleStock(event)">
                                                         @foreach (var stock in Model.Product.Stocks)
                                                         {
-                                                            <option value="@stock.Id">@stock.Description</option>
+                                                            var disabled = stock.Quantity <= 0;
+
+                                                            <option value="@stock.Id" disabled="@disabled">@stock.Description</option>
                                                         }
                                                     </select>
                                                 </div>
@@ -50,6 +52,18 @@
                                             <div class="control">
                                                 <input class="input" asp-for="CartDto.Quantity" value="1">
                                             </div>
+                                            @foreach (var stock in Model.Product.Stocks)
+                                            {
+                                                if (stock.Quantity <= 10)
+                                                {
+                                                    <p class="help is-danger is-hidden low-stock" id="low-stock-@stock.Id">
+                                                        @{
+                                                            var outOfStock = stock.Quantity == 0 ? "Out of Stock" : $"{stock.Quantity} left";
+                                                        }
+                                                        @outOfStock
+                                                    </p>
+                                                }
+                                            }
                                         </div>
                                     </div>
                                 </div>
@@ -73,3 +87,25 @@
         </div>
     </div>
 </div>
+
+<script>
+    const toggleStock = function (event) {
+        let stockToHide = document.querySelectorAll('.low-stock');
+                               
+        stockToHide.forEach(el => {
+           el.classList.add('is-hidden');
+        });
+        
+        showLowStock(event.target.value);
+    };
+    
+    const showLowStock = function (id) {
+        let stockToShow = document.getElementById(`low-stock-${id}`);
+        
+        if (stockToShow !== null && stockToShow !== undefined) {
+            stockToShow.classList.remove('is-hidden');
+        }
+    };
+    
+    showLowStock(document.getElementById('CartDto_StockId').value);
+</script>

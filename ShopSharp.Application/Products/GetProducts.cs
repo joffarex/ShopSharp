@@ -18,19 +18,19 @@ namespace ShopSharp.Application.Products
         public IEnumerable<ProductViewModel> Exec()
         {
             return _context.Products.Include(x => x.Stocks)
-                .ToList()
                 .Select(x => new ProductViewModel
                 {
                     Name = x.Name,
                     Description = x.Description,
                     Value = $"${x.Value:N2}", // 69420.60 => $ 69,420.60
+                    StockCount = x.Stocks.Sum(y => y.Quantity),
                     Stocks = x.Stocks.Select(y => new StockViewModel
                     {
                         Id = y.Id,
                         Description = y.Description,
-                        InStock = y.Quantity > 0
+                        Quantity = y.Quantity
                     })
-                });
+                }).ToList();
         }
     }
 }
