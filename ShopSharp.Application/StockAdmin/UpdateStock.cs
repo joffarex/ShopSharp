@@ -7,6 +7,7 @@ using ShopSharp.Domain.Models;
 
 namespace ShopSharp.Application.StockAdmin
 {
+    [Service]
     public class UpdateStock
     {
         private readonly IStockManager _stockManager;

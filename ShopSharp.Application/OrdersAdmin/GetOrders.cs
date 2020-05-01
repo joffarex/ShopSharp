@@ -5,6 +5,7 @@ using ShopSharp.Domain.Infrastructure;
 
 namespace ShopSharp.Application.OrdersAdmin
 {
+    [Service]
     public class GetOrders
     {
         private readonly IOrderManager _orderManager;

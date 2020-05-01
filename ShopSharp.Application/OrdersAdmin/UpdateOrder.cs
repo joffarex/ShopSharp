@@ -3,6 +3,7 @@ using ShopSharp.Domain.Infrastructure;
 
 namespace ShopSharp.Application.OrdersAdmin
 {
+    [Service]
     public class UpdateOrder
     {
         private readonly IOrderManager _orderManager;

@@ -6,6 +6,7 @@ using ShopSharp.Domain.Models;
 
 namespace ShopSharp.Application.Orders
 {
+    [Service]
     public class CreateOrder
     {
         private readonly IOrderManager _orderManager;

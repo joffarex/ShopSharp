@@ -6,6 +6,7 @@ using ShopSharp.Domain.Models;
 
 namespace ShopSharp.Application.ProductsAdmin
 {
+    [Service]
     public class CreateProduct
     {
         private readonly IProductManager _productManager;

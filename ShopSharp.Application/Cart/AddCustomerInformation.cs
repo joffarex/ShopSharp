@@ -4,6 +4,7 @@ using ShopSharp.Domain.Models;
 
 namespace ShopSharp.Application.Cart
 {
+    [Service]
     public class AddCustomerInformation
     {
         private readonly ISessionManager _sessionManager;

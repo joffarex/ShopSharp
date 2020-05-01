@@ -8,8 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using ShopSharp.Database;
-using ShopSharp.Domain.Infrastructure;
-using ShopSharp.UI.Infrastructure;
 using Stripe;
 
 namespace ShopSharp.UI
@@ -27,12 +25,6 @@ namespace ShopSharp.UI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddHttpContextAccessor();
-
-            // services.Configure<CookiePolicyOptions>(options =>
-            // {
-            //     options.CheckConsentNeeded = context => true;
-            //     options.MinimumSameSitePolicy = SameSiteMode.None;
-            // });
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration["DefaultConnection"]));
@@ -73,11 +65,6 @@ namespace ShopSharp.UI
                 options.Cookie.MaxAge = TimeSpan.FromMinutes(20);
             });
 
-            services.AddTransient<IOrderManager, OrderManager>();
-            services.AddTransient<IProductManager, ProductManager>();
-            services.AddTransient<IUserManager, UserManager>();
-            services.AddTransient<IStockManager, StockManager>();
-            services.AddScoped<ISessionManager, SessionManager>();
 
             StripeConfiguration.ApiKey = Configuration.GetSection("Stripe")["SecretKey"];
 

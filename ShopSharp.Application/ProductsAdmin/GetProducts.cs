@@ -4,6 +4,7 @@ using ShopSharp.Domain.Infrastructure;
 
 namespace ShopSharp.Application.ProductsAdmin
 {
+    [Service]
     public class GetProducts
     {
         private readonly IProductManager _productManager;

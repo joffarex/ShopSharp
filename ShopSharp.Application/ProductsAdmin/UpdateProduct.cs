@@ -5,6 +5,7 @@ using ShopSharp.Domain.Infrastructure;
 
 namespace ShopSharp.Application.ProductsAdmin
 {
+    [Service]
     public class UpdateProduct
     {
         private readonly IProductManager _productManager;

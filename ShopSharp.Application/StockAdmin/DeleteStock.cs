@@ -3,6 +3,7 @@ using ShopSharp.Domain.Infrastructure;
 
 namespace ShopSharp.Application.StockAdmin
 {
+    [Service]
     public class DeleteStock
     {
         private readonly IStockManager _stockManager;

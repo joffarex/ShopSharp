@@ -5,6 +5,7 @@ using ShopSharp.Domain.Infrastructure;
 
 namespace ShopSharp.Application.StockAdmin
 {
+    [Service]
     public class GetStock
     {
         private readonly IStockManager _stockManager;

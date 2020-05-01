@@ -4,6 +4,7 @@ using ShopSharp.Domain.Infrastructure;
 
 namespace ShopSharp.Application.Cart
 {
+    [Service]
     public class GetOrder
     {
         private readonly ISessionManager _sessionManager;

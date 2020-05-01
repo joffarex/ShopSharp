@@ -3,6 +3,7 @@ using ShopSharp.Domain.Infrastructure;
 
 namespace ShopSharp.Application.ProductsAdmin
 {
+    [Service]
     public class DeleteProduct
     {
         private readonly IProductManager _productManager;
