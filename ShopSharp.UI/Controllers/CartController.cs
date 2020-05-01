@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ShopSharp.Application.Cart;
 using ShopSharp.Application.Cart.Dto;
@@ -24,13 +25,13 @@ namespace ShopSharp.UI.Controllers
             return BadRequest("Failed to add to cart");
         }
 
-        [HttpPost("{stockId}")]
-        public async Task<IActionResult> RemoveOne(int stockId, [FromServices] RemoveFromCart removeFromCart)
+        [HttpPost("{stockId}/{quantity}")]
+        public async Task<IActionResult> Remove(int stockId, int quantity, [FromServices] RemoveFromCart removeFromCart)
         {
             var cartDto = new CartDto
             {
                 StockId = stockId,
-                Quantity = 1
+                Quantity = quantity
             };
 
             var result = await removeFromCart.ExecAsync(cartDto);
@@ -40,20 +41,18 @@ namespace ShopSharp.UI.Controllers
             return BadRequest("Failed to remove from cart");
         }
 
-        [HttpPost("{stockId}")]
-        public async Task<IActionResult> RemoveAll(int stockId, [FromServices] RemoveFromCart removeFromCart)
+        [HttpGet]
+        public IActionResult GetCartComponent([FromServices] GetCart getCart)
         {
-            var cartDto = new CartDto
-            {
-                StockId = stockId,
-                All = true
-            };
+            var totalValue = getCart.Exec().Sum(x => x.RealValue * x.Quantity);
+            return PartialView("Components/Cart/Small", $"${totalValue}");
+        }
 
-            var result = await removeFromCart.ExecAsync(cartDto);
-
-            if (result) return Ok("Item removed all cart");
-
-            return BadRequest("Failed to remove all cart");
+        [HttpGet]
+        public IActionResult GetCartMain([FromServices] GetCart getCart)
+        {
+            var cart = getCart.Exec();
+            return PartialView("_CartPartial", cart);
         }
     }
 }

@@ -3,12 +3,18 @@
 
     axios.post(`/Cart/AddOne/${stockId}`)
         .then(res => {
-            console.log(res.data);
-            let el = document.getElementById(`stock-${stockId}`);
+            updateCart();
+        })
+        .catch(err => {
+            console.error(err);
+            alert(err.message);
+        });
+};
 
-            let quantity = Number(el.innerText);
-            el.innerText = (quantity + 1);
-            updateTotalValue(stockId, 'add');
+const removeFromCart = function (stockId, quantity) {
+    axios.post(`/Cart/Remove/${stockId}/${quantity}`)
+        .then(res => {
+            updateCart();
         })
         .catch(err => {
             console.error(err);
@@ -19,64 +25,31 @@
 const removeOneFromCart = function (event) {
     const stockId = event.target.dataset.stockId;
 
-    axios.post(`/Cart/RemoveOne/${stockId}`)
-        .then(res => {
-            console.log(res.data);
-            let el = document.getElementById(`stock-${stockId}`);
-
-            let quantity = Number(el.innerText);
-            el.innerText = (quantity - 1);
-            updateTotalValue(stockId, 'remove');
-        })
-        .catch(err => {
-            console.error(err);
-            alert(err.message);
-        });
+    removeFromCart(stockId, 1)
 };
 
 const removeAllFromCart = function (event) {
     const stockId = event.target.dataset.stockId;
+    let el = document.getElementById(`stock-quantity-${stockId}`);
+    let quantity = Number(el.innerText);
 
-    axios.post(`/Cart/RemoveAll/${stockId}`)
-        .then(res => {
-            console.log(res.data);
-            let el = document.getElementById(`product-${stockId}`);
-            let value = document.getElementById(`product-value-${stockId}`).innerText.split('$')[1];
-            let quantity = document.getElementById(`stock-${stockId}`).innerText;
-
-            let totalValue = Number(value) * Number(quantity);
-
-            el.outerHTML = "";
-            updateTotalValue(stockId, 'removeAll', totalValue);
-        })
-        .catch(err => {
-            console.error(err);
-            alert(err.message);
-        });
+    removeFromCart(stockId, quantity);
 };
 
-const updateTotalValue = function (stockId, type, removeAllTotalValue = null) {
-    let value;
-    if (removeAllTotalValue === null) {
-        value = document.getElementById(`product-value-${stockId}`).innerText.split('$')[1];
-    } else {
-        value = removeAllTotalValue.toFixed(2);
-    }
+const updateCart = function () {
+    axios.get('/Cart/GetCartComponent')
+        .then(res => {
+            let html = res.data;
+            let el = document.getElementById('cart-nav');
+            el.outerHTML = html;
+        })
+        .catch(console.error);
 
-    let el = document.getElementById('total-value');
-    let totalValue = Number(el.innerText.substr(1));
-    switch (type) {
-        case 'remove':
-            el.innerText = `$${(totalValue - Number(value)).toFixed(2)}`;
-            break;
-        case 'add':
-            el.innerText = `$${(totalValue + Number(value)).toFixed(2)}`;
-            break;
-        case 'removeAll':
-            const displayValue = (totalValue - Number(value)).toFixed(2);
-            el.innerText = `$${displayValue}`;
-            break;
-        default:
-            break;
-    }
+    axios.get('/Cart/GetCartMain')
+        .then(res => {
+            let html = res.data;
+            let el = document.getElementById('cart-main');
+            el.outerHTML = html;
+        })
+        .catch(console.error);
 };
