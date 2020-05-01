@@ -18,11 +18,12 @@ namespace ShopSharp.Application.Cart
 
         public async Task<bool> ExecAsync(CartDto cartDto)
         {
-            // service responsibility
             if (!_stockManager.EnoughStock(cartDto.StockId, cartDto.Quantity)) return false;
 
-            // database responsibility
-            await _stockManager.PutStockOnHold(cartDto.StockId, cartDto.Quantity, _sessionManager.GetId());
+            var success =
+                await _stockManager.PutStockOnHold(cartDto.StockId, cartDto.Quantity, _sessionManager.GetId()) > 0;
+
+            if (!success) return false;
 
             var stock = _stockManager.GetStockWithProduct(cartDto.StockId);
 

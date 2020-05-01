@@ -19,7 +19,10 @@ namespace ShopSharp.Application.Cart
         {
             if (cartDto.Quantity <= 0) return false;
 
-            await _stockManager.RemoveStockFromHold(cartDto.StockId, cartDto.Quantity, _sessionManager.GetId());
+            var success =
+                await _stockManager.RemoveStockFromHold(cartDto.StockId, cartDto.Quantity, _sessionManager.GetId()) > 0;
+
+            if (!success) return false;
 
             _sessionManager.RemoveProduct(cartDto.StockId, cartDto.Quantity);
 

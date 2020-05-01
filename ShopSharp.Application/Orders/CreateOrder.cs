@@ -38,13 +38,8 @@ namespace ShopSharp.Application.Orders
                 }).ToList()
             };
 
-            var success = await _orderManager.CreateOrder(order) > 0;
-
-            if (!success) return false;
-
-            await _stockManager.RemoveStockFromHold(createOrderDto.SessionId);
-
-            return true;
+            return await _orderManager.CreateOrder(order) > 0 &&
+                   await _stockManager.RemoveStockFromHold(createOrderDto.SessionId) > 0;
         }
     }
 }

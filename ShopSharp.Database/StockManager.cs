@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,7 @@ namespace ShopSharp.Database
             _context = context;
         }
 
+
         public Stock GetStockWithProduct(int stockId)
         {
             var stock = _context.Stocks
@@ -23,6 +25,39 @@ namespace ShopSharp.Database
                 .FirstOrDefault(x => x.Id == stockId);
 
             return stock ?? null;
+        }
+
+        public IEnumerable<TResult> GetProductsWithStock<TResult>(Func<Product, TResult> selector)
+        {
+            return _context.Products
+                .Include(x => x.Stocks)
+                .Select(selector)
+                .ToList();
+        }
+
+        public Task<int> CreateStock(Stock stock)
+        {
+            _context.Stocks.Add(stock);
+
+            return _context.SaveChangesAsync();
+        }
+
+        public Task<int> DeleteStock(int id)
+        {
+            var stock = _context.Stocks.FirstOrDefault(x => x.Id == id);
+
+            if (stock == null) return null;
+
+            _context.Stocks.Remove(stock);
+
+            return _context.SaveChangesAsync();
+        }
+
+        public Task<int> UpdateStockRange(IEnumerable<Stock> stockList)
+        {
+            _context.Stocks.UpdateRange(stockList);
+
+            return _context.SaveChangesAsync();
         }
 
         public bool EnoughStock(int stockId, int quantity)
@@ -34,7 +69,7 @@ namespace ShopSharp.Database
             return stockToHold.Quantity >= quantity;
         }
 
-        public Task PutStockOnHold(int stockId, int quantity, string sessionId)
+        public Task<int> PutStockOnHold(int stockId, int quantity, string sessionId)
         {
             var stockToHold = _context.Stocks.FirstOrDefault(x => x.Id == stockId);
             if (stockToHold == null) return null;
@@ -83,7 +118,7 @@ namespace ShopSharp.Database
             return _context.SaveChangesAsync();
         }
 
-        public Task RemoveStockFromHold(string sessionId)
+        public Task<int> RemoveStockFromHold(string sessionId)
         {
             var stockOnHold = _context.StocksOnHold
                 .Where(x => x.SessionId == sessionId)
@@ -94,7 +129,7 @@ namespace ShopSharp.Database
             return _context.SaveChangesAsync();
         }
 
-        public Task RemoveStockFromHold(int stockId, int quantity, string sessionId)
+        public Task<int> RemoveStockFromHold(int stockId, int quantity, string sessionId)
         {
             var stockOnHold = _context.StocksOnHold
                 .FirstOrDefault(x => x.StockId == stockId && x.SessionId == sessionId);

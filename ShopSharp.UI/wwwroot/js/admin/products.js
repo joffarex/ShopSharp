@@ -38,9 +38,9 @@
                         id: product.id,
                         name: product.name,
                         description: product.description,
-                        value: product.value.slice(2),
+                        value: product.value.slice(1),
                     };
-                    console.log(res.data);
+                    console.log(this.productModel);
                 })
                 .catch(console.error)
                 .then(() => {
@@ -71,7 +71,6 @@
             this.editing = true;
             this.objectIndex = index;
             this.getProduct(id);
-
         },
         updateProduct() {
             this.loading = true;

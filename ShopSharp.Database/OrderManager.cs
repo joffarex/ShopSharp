@@ -43,12 +43,27 @@ namespace ShopSharp.Database
 
         public TResult GetOrderById<TResult>(int id, Func<Order, TResult> selector)
         {
-            return GetOrder(order => order.Id == id, selector);
+            return _context.Orders
+                .Where(x => x.Id == id)
+                .Include(x => x.OrderStocks)
+                .ThenInclude(x => x.Stock)
+                .ThenInclude(x => x.Product)
+                .AsEnumerable()
+                .Select(selector)
+                .FirstOrDefault();
         }
+
 
         public TResult GetOrderByReference<TResult>(string orderRef, Func<Order, TResult> selector)
         {
-            return GetOrder(order => order.OrderRef == orderRef, selector);
+            return _context.Orders
+                .Where(x => x.OrderRef == orderRef)
+                .Include(x => x.OrderStocks)
+                .ThenInclude(x => x.Stock)
+                .ThenInclude(x => x.Product)
+                .AsEnumerable()
+                .Select(selector)
+                .FirstOrDefault();
         }
 
         public Task<int> CreateOrder(Order order)
@@ -67,17 +82,6 @@ namespace ShopSharp.Database
             order.Status += 1;
 
             return _context.SaveChangesAsync();
-        }
-
-        private TResult GetOrder<TResult>(Func<Order, bool> condition, Func<Order, TResult> selector)
-        {
-            return _context.Orders
-                .Where(x => condition(x))
-                .Include(x => x.OrderStocks)
-                .ThenInclude(x => x.Stock)
-                .ThenInclude(x => x.Product)
-                .Select(selector)
-                .FirstOrDefault();
         }
     }
 }

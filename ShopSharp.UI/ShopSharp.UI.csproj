@@ -7,6 +7,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\ShopSharp.Application\ShopSharp.Application.csproj"/>
+        <ProjectReference Include="..\ShopSharp.Database\ShopSharp.Database.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
