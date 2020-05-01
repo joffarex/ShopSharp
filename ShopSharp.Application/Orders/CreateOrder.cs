@@ -1,30 +1,27 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using ShopSharp.Application.Orders.Dto;
-using ShopSharp.Database;
+using ShopSharp.Domain.Infrastructure;
 using ShopSharp.Domain.Models;
 
 namespace ShopSharp.Application.Orders
 {
     public class CreateOrder
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IOrderManager _orderManager;
+        private readonly IStockManager _stockManager;
 
-        public CreateOrder(ApplicationDbContext context)
+        public CreateOrder(IStockManager stockManager, IOrderManager orderManager)
         {
-            _context = context;
+            _stockManager = stockManager;
+            _orderManager = orderManager;
         }
 
         public async Task<bool> ExecAsync(CreateOrderDto createOrderDto)
         {
-            var stockOnHold = _context.StocksOnHold.Where(x => x.SessionId == createOrderDto.SessionId).ToList();
-
-            _context.StocksOnHold.RemoveRange(stockOnHold);
-
             var order = new Order
             {
-                OrderRef = CreateOrderRef(),
+                OrderRef = _orderManager.CreateOrderRef(),
                 StripeRef = createOrderDto.StripeRef,
                 FirstName = createOrderDto.FirstName,
                 LastName = createOrderDto.LastName,
@@ -41,24 +38,13 @@ namespace ShopSharp.Application.Orders
                 }).ToList()
             };
 
-            _context.Orders.Add(order);
+            var success = await _orderManager.CreateOrder(order) > 0;
 
-            return await _context.SaveChangesAsync() > 0;
-        }
+            if (!success) return false;
 
-        public string CreateOrderRef()
-        {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            var result = new char[12];
-            var random = new Random();
+            await _stockManager.RemoveStockFromHold(createOrderDto.SessionId);
 
-            do
-            {
-                for (var i = 0; i < result.Length; ++i) result[i] = chars[random.Next(chars.Length)];
-                // if somehow OrderRef already exists
-            } while (_context.Orders.Any(x => x.OrderRef == new string(result)));
-
-            return new string(result);
+            return true;
         }
     }
 }

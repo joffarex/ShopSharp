@@ -1,27 +1,20 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using ShopSharp.Database;
+﻿using System.Threading.Tasks;
+using ShopSharp.Domain.Infrastructure;
 
 namespace ShopSharp.Application.OrdersAdmin
 {
     public class UpdateOrder
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IOrderManager _orderManager;
 
-        public UpdateOrder(ApplicationDbContext context)
+        public UpdateOrder(IOrderManager orderManager)
         {
-            _context = context;
+            _orderManager = orderManager;
         }
 
         public async Task<bool> ExecAsync(int id)
         {
-            var order = _context.Orders.FirstOrDefault(x => x.Id == id);
-
-            if (order == null) return false;
-
-            order.Status += 1;
-
-            return await _context.SaveChangesAsync() > 0;
+            return await _orderManager.AdvanceOrder(id) > 0;
         }
     }
 }

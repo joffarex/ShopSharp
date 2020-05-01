@@ -1,29 +1,30 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using ShopSharp.Application.OrdersAdmin.ViewModels;
-using ShopSharp.Database;
 using ShopSharp.Domain.Enums;
+using ShopSharp.Domain.Infrastructure;
 
 namespace ShopSharp.Application.OrdersAdmin
 {
     public class GetOrders
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IOrderManager _orderManager;
 
-        public GetOrders(ApplicationDbContext context)
+        public GetOrders(IOrderManager orderManager)
         {
-            _context = context;
+            _orderManager = orderManager;
         }
 
         public IEnumerable<OrdersViewModel> Exec(int status)
         {
-            return _context.Orders.Where(x => x.Status == (OrderStatus) status)
-                .Select(x => new OrdersViewModel
+            return _orderManager.GetOrdersByStatus(
+                (OrderStatus) status,
+                x => new OrdersViewModel
                 {
                     Id = x.Id,
                     OrderRef = x.OrderRef,
                     Email = x.Email
-                }).ToList();
+                }
+            );
         }
     }
 }
