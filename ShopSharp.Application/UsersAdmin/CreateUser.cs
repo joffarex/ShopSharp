@@ -1,32 +1,21 @@
-﻿using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
+﻿using System.Threading.Tasks;
 using ShopSharp.Application.UsersAdmin.Dto;
+using ShopSharp.Domain.Infrastructure;
 
 namespace ShopSharp.Application.UsersAdmin
 {
     public class CreateUser
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly IUserManager _userManager;
 
-        public CreateUser(UserManager<IdentityUser> userManager)
+        public CreateUser(IUserManager userManager)
         {
             _userManager = userManager;
         }
 
         public async Task<bool> ExecAsync(UserDto userDto)
         {
-            var managerUser = new IdentityUser
-            {
-                UserName = userDto.Username
-            };
-
-            await _userManager.CreateAsync(managerUser, "password");
-
-            var managerClaim = new Claim("Role", "Manager");
-            await _userManager.AddClaimAsync(managerUser, managerClaim);
-
-            return true;
+            return await _userManager.CreateManagerUser(userDto.Username, userDto.Password);
         }
     }
 }

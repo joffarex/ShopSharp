@@ -19,9 +19,11 @@ namespace ShopSharp.UI.Controllers
 
         public async Task<IActionResult> CreateUser([FromBody] UserDto userDto)
         {
-            await _createUser.ExecAsync(userDto);
+            var success = await _createUser.ExecAsync(userDto);
 
-            return Ok();
+            if (success) return Ok();
+
+            return BadRequest();
         }
     }
 }

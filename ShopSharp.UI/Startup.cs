@@ -74,6 +74,8 @@ namespace ShopSharp.UI
             });
 
             services.AddTransient<IOrderManager, OrderManager>();
+            services.AddTransient<IProductManager, ProductManager>();
+            services.AddTransient<IUserManager, UserManager>();
             services.AddTransient<IStockManager, StockManager>();
             services.AddScoped<ISessionManager, SessionManager>();
 
