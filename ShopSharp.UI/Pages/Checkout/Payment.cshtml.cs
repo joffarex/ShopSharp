@@ -7,6 +7,7 @@ using ShopSharp.Application.Cart;
 using ShopSharp.Application.Orders;
 using ShopSharp.Application.Orders.Dto;
 using ShopSharp.Application.Orders.ViewModels;
+using ShopSharp.Domain.Infrastructure;
 using Stripe;
 using GetOrderCart = ShopSharp.Application.Cart.GetOrder;
 
@@ -39,7 +40,8 @@ namespace ShopSharp.UI.Pages.Checkout
         }
 
         public async Task<IActionResult> OnPost(string stripeEmail, string stripeToken,
-            [FromServices] GetOrderCart getOrder, [FromServices] CreateOrder createOrder)
+            [FromServices] GetOrderCart getOrder, [FromServices] CreateOrder createOrder,
+            [FromServices] ISessionManager sessionManager)
         {
             var customers = new CustomerService();
             var charges = new ChargeService();
@@ -81,7 +83,7 @@ namespace ShopSharp.UI.Pages.Checkout
                 }).ToList()
             });
 
-            HttpContext.Session.Remove("cart");
+            sessionManager.ClearCart();
 
             return RedirectToPage("/Index");
         }

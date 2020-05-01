@@ -10,6 +10,8 @@ namespace ShopSharp.UI.Infrastructure
 {
     public class SessionManager : ISessionManager
     {
+        private const string CartSessionKey = "cart";
+        private const string CustomerInformationSessionKey = "customer-info";
         private readonly ISession _session;
 
         public SessionManager(IHttpContextAccessor httpContextAccessor)
@@ -25,7 +27,7 @@ namespace ShopSharp.UI.Infrastructure
         public void AddProduct(CartProduct cartProduct)
         {
             var cartList = new List<CartProduct>();
-            var jsonCardProduct = _session.GetString("cart");
+            var jsonCardProduct = _session.GetString(CartSessionKey);
 
             if (!string.IsNullOrEmpty(jsonCardProduct))
                 cartList = JsonConvert.DeserializeObject<List<CartProduct>>(jsonCardProduct);
@@ -38,13 +40,13 @@ namespace ShopSharp.UI.Infrastructure
 
             jsonCardProduct = JsonConvert.SerializeObject(cartList);
 
-            _session.SetString("cart", jsonCardProduct);
+            _session.SetString(CartSessionKey, jsonCardProduct);
         }
 
         public void RemoveProduct(int stockId, int quantity)
         {
             List<CartProduct> cart;
-            var jsonCartProduct = _session.GetString("cart");
+            var jsonCartProduct = _session.GetString(CartSessionKey);
 
             if (string.IsNullOrEmpty(jsonCartProduct)) return;
 
@@ -60,12 +62,12 @@ namespace ShopSharp.UI.Infrastructure
 
             jsonCartProduct = JsonConvert.SerializeObject(cart);
 
-            _session.SetString("cart", jsonCartProduct);
+            _session.SetString(CartSessionKey, jsonCartProduct);
         }
 
         public IEnumerable<TResult> GetCart<TResult>(Func<CartProduct, TResult> selector)
         {
-            var jsonCardProduct = _session.GetString("cart");
+            var jsonCardProduct = _session.GetString(CartSessionKey);
 
             if (string.IsNullOrEmpty(jsonCardProduct)) return new List<TResult>();
 
@@ -74,16 +76,21 @@ namespace ShopSharp.UI.Infrastructure
             return cartList.Select(selector);
         }
 
+        public void ClearCart()
+        {
+            _session.Remove(CartSessionKey);
+        }
+
         public void AddCustomerInformation(CustomerInformation customerInformation)
         {
             var jsonCustomerInformation = JsonConvert.SerializeObject(customerInformation);
 
-            _session.SetString("customer-info", jsonCustomerInformation);
+            _session.SetString(CustomerInformationSessionKey, jsonCustomerInformation);
         }
 
         public CustomerInformation GetCustomerInformation()
         {
-            var jsonCustomerInformation = _session.GetString("customer-info");
+            var jsonCustomerInformation = _session.GetString(CustomerInformationSessionKey);
 
             if (string.IsNullOrEmpty(jsonCustomerInformation)) return null;
 
