@@ -1,26 +1,20 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using ShopSharp.Database;
+﻿using System.Threading.Tasks;
+using ShopSharp.Domain.Infrastructure;
 
 namespace ShopSharp.Application.StockAdmin
 {
     public class DeleteStock
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IStockManager _stockManager;
 
-        public DeleteStock(ApplicationDbContext context)
+        public DeleteStock(IStockManager stockManager)
         {
-            _context = context;
+            _stockManager = stockManager;
         }
 
         public async Task<bool> ExecAsync(int id)
         {
-            var stock = _context.Stocks.FirstOrDefault(x => x.Id == id);
-            _context.Stocks.Remove(stock ?? throw new Exception("Stock not found"));
-            await _context.SaveChangesAsync();
-
-            return true;
+            return await _stockManager.DeleteStock(id) > 0;
         }
     }
 }

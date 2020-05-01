@@ -1,36 +1,32 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using ShopSharp.Application.StockAdmin.ViewModels;
-using ShopSharp.Database;
+using ShopSharp.Domain.Infrastructure;
 
 namespace ShopSharp.Application.StockAdmin
 {
     public class GetStock
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IStockManager _stockManager;
 
-        public GetStock(ApplicationDbContext context)
+        public GetStock(IStockManager stockManager)
         {
-            _context = context;
+            _stockManager = stockManager;
         }
 
         public IEnumerable<ProductViewModel> Exec()
         {
-            var stock = _context.Products.Include(x => x.Stocks)
-                .Select(x => new ProductViewModel
+            return _stockManager.GetProductsWithStock(x => new ProductViewModel
+            {
+                Id = x.Id,
+                Description = x.Description,
+                Stocks = x.Stocks.Select(y => new StockViewModel
                 {
-                    Id = x.Id,
-                    Description = x.Description,
-                    Stocks = x.Stocks.Select(y => new StockViewModel
-                    {
-                        Id = y.Id,
-                        Description = y.Description,
-                        Quantity = y.Quantity
-                    })
-                }).ToList();
-
-            return stock;
+                    Id = y.Id,
+                    Description = y.Description,
+                    Quantity = y.Quantity
+                })
+            });
         }
     }
 }

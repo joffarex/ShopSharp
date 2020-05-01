@@ -1,18 +1,18 @@
 ﻿using System.Threading.Tasks;
 using ShopSharp.Application.StockAdmin.Dto;
 using ShopSharp.Application.StockAdmin.ViewModels;
-using ShopSharp.Database;
+using ShopSharp.Domain.Infrastructure;
 using ShopSharp.Domain.Models;
 
 namespace ShopSharp.Application.StockAdmin
 {
     public class CreateStock
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IStockManager _stockManager;
 
-        public CreateStock(ApplicationDbContext context)
+        public CreateStock(IStockManager stockManager)
         {
-            _context = context;
+            _stockManager = stockManager;
         }
 
         public async Task<StockViewModel> ExecAsync(StockDto stockDto)
@@ -24,9 +24,9 @@ namespace ShopSharp.Application.StockAdmin
                 ProductId = stockDto.ProductId
             };
 
-            _context.Stocks.Add(stock);
+            var success = await _stockManager.CreateStock(stock) > 0;
 
-            await _context.SaveChangesAsync();
+            if (!success) return null;
 
             return new StockViewModel
             {
