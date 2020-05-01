@@ -1,5 +1,5 @@
 ﻿using ShopSharp.Application.Cart.ViewModels;
-using ShopSharp.Application.Infrastructure;
+using ShopSharp.Domain.Infrastructure;
 
 namespace ShopSharp.Application.Cart
 {

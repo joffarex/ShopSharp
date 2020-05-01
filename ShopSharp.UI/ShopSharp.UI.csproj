@@ -106,6 +106,8 @@
         <_ContentIncludedByDefault Remove="wwwroot\lib\bulma-0.8.2\sass\utilities\initial-variables.sass"/>
         <_ContentIncludedByDefault Remove="wwwroot\lib\bulma-0.8.2\sass\utilities\mixins.sass"/>
         <_ContentIncludedByDefault Remove="wwwroot\lib\bulma-0.8.2\sass\utilities\_all.sass"/>
+        <_ContentIncludedByDefault Remove="Pages\Components\Cart\Default.cshtml"/>
+        <_ContentIncludedByDefault Remove="Pages\Components\Cart\Small.cshtml"/>
     </ItemGroup>
 
     <ItemGroup>

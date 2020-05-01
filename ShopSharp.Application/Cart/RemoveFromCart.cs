@@ -1,51 +1,27 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using ShopSharp.Application.Cart.Dto;
-using ShopSharp.Application.Infrastructure;
-using ShopSharp.Database;
+using ShopSharp.Domain.Infrastructure;
 
 namespace ShopSharp.Application.Cart
 {
     public class RemoveFromCart
     {
-        private readonly ApplicationDbContext _context;
         private readonly ISessionManager _sessionManager;
+        private readonly IStockManager _stockManager;
 
-        public RemoveFromCart(ISessionManager sessionManager, ApplicationDbContext context)
+        public RemoveFromCart(ISessionManager sessionManager, IStockManager stockManager)
         {
             _sessionManager = sessionManager;
-            _context = context;
+            _stockManager = stockManager;
         }
-
 
         public async Task<bool> ExecAsync(CartDto cartDto)
         {
-            var stockOnHold = _context.StocksOnHold.FirstOrDefault(
-                x => x.StockId == cartDto.StockId && x.SessionId == _sessionManager.GetId()
-            );
+            if (cartDto.Quantity <= 0) return false;
 
-            if (stockOnHold == null) return false;
+            await _stockManager.RemoveStockFromHold(cartDto.StockId, cartDto.Quantity, _sessionManager.GetId());
 
-            var stock = _context.Stocks.FirstOrDefault(x => x.Id == cartDto.StockId);
-
-            if (stock == null) return false;
-
-            if (cartDto.All)
-            {
-                stock.Quantity += stockOnHold.Quantity;
-                _sessionManager.RemoveProduct(cartDto.StockId, stockOnHold.Quantity);
-                stockOnHold.Quantity = 0;
-            }
-            else
-            {
-                stock.Quantity += cartDto.Quantity;
-                stockOnHold.Quantity -= cartDto.Quantity;
-                _sessionManager.RemoveProduct(cartDto.StockId, cartDto.Quantity);
-            }
-
-            if (stockOnHold.Quantity <= 0) _context.Remove(stockOnHold);
-
-            await _context.SaveChangesAsync();
+            _sessionManager.RemoveProduct(cartDto.StockId, cartDto.Quantity);
 
             return true;
         }

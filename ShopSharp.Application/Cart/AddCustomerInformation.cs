@@ -1,5 +1,5 @@
 ﻿using ShopSharp.Application.Cart.Dto;
-using ShopSharp.Application.Infrastructure;
+using ShopSharp.Domain.Infrastructure;
 using ShopSharp.Domain.Models;
 
 namespace ShopSharp.Application.Cart
