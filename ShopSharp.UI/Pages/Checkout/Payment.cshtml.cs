@@ -7,48 +7,44 @@ using ShopSharp.Application.Cart;
 using ShopSharp.Application.Orders;
 using ShopSharp.Application.Orders.Dto;
 using ShopSharp.Application.Orders.ViewModels;
-using ShopSharp.Database;
 using Stripe;
-using GetOrder = ShopSharp.Application.Cart.GetOrder;
+using GetOrderCart = ShopSharp.Application.Cart.GetOrder;
 
 namespace ShopSharp.UI.Pages.Checkout
 {
     public class PaymentModel : PageModel
     {
-        private readonly ApplicationDbContext _context;
-        private readonly CreateOrder _createOrder;
-
-        public PaymentModel(IConfiguration configuration, ApplicationDbContext context, CreateOrder createOrder)
+        public PaymentModel(IConfiguration configuration)
         {
-            _context = context;
-            _createOrder = createOrder;
             PublishableKey = configuration["Stripe:PublishableKey"];
         }
 
         public string PublishableKey { get; }
         public string TotalValue { get; set; }
 
-        public IActionResult OnGet()
+        public IActionResult OnGet([FromServices] GetCustomerInformation getCustomerInformation,
+            [FromServices] GetCart getCart)
         {
-            var information = new GetCustomerInformation(HttpContext.Session).Exec();
-            var totalValue = new GetCart(HttpContext.Session, _context).Exec().Sum(x => x.RealValue * x.Quantity);
+            var information = getCustomerInformation.Exec();
+            var totalValue = getCart.Exec().Sum(x => x.RealValue * x.Quantity);
             TotalValue = $"${totalValue}";
 
             if (information == null) return RedirectToPage("/Checkout/CustomerInformation");
 
-            var cart = new GetCart(HttpContext.Session, _context).Exec();
+            var cart = getCart.Exec();
 
             if (cart.Count() == 0) return RedirectToPage("/Cart");
 
             return Page();
         }
 
-        public async Task<IActionResult> OnPost(string stripeEmail, string stripeToken)
+        public async Task<IActionResult> OnPost(string stripeEmail, string stripeToken,
+            [FromServices] GetOrderCart getOrder, [FromServices] CreateOrder createOrder)
         {
             var customers = new CustomerService();
             var charges = new ChargeService();
 
-            var cartOrder = new GetOrder(HttpContext.Session, _context).Exec();
+            var cartOrder = getOrder.Exec();
 
             var customer = customers.Create(new CustomerCreateOptions
             {
@@ -66,7 +62,7 @@ namespace ShopSharp.UI.Pages.Checkout
 
             var sessionId = HttpContext.Session.Id;
 
-            await _createOrder.ExecAsync(new CreateOrderDto
+            await createOrder.ExecAsync(new CreateOrderDto
             {
                 SessionId = sessionId,
                 StripeRef = charge.Id,
@@ -84,6 +80,8 @@ namespace ShopSharp.UI.Pages.Checkout
                     Quantity = x.Quantity
                 }).ToList()
             });
+
+            HttpContext.Session.Remove("cart");
 
             return RedirectToPage("/Index");
         }

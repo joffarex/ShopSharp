@@ -4,30 +4,28 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Hosting;
 using ShopSharp.Application.Cart;
 using ShopSharp.Application.Cart.Dto;
-using ShopSharp.Database;
 
 namespace ShopSharp.UI.Pages.Checkout
 {
     public class CustomerInformationModel : PageModel
     {
-        private readonly ApplicationDbContext _context;
         private readonly IHostEnvironment _environment;
 
-        public CustomerInformationModel(IHostEnvironment environment, ApplicationDbContext context)
+        public CustomerInformationModel(IHostEnvironment environment)
         {
             _environment = environment;
-            _context = context;
         }
 
         [BindProperty] public CustomerInformationDto CustomerInformation { get; set; }
 
-        public IActionResult OnGet()
+        public IActionResult OnGet([FromServices] GetCart getCart,
+            [FromServices] GetCustomerInformation getCustomerInformation)
         {
-            var cart = new GetCart(HttpContext.Session, _context).Exec();
+            var cart = getCart.Exec();
 
             if (cart.Count() == 0) return RedirectToPage("/Cart");
 
-            var information = new GetCustomerInformation(HttpContext.Session).Exec();
+            var information = getCustomerInformation.Exec();
 
             if (information == null)
             {
@@ -48,11 +46,11 @@ namespace ShopSharp.UI.Pages.Checkout
             return RedirectToPage("/Checkout/Payment");
         }
 
-        public IActionResult OnPost()
+        public IActionResult OnPost([FromServices] AddCustomerInformation addCustomerInformation)
         {
             if (!ModelState.IsValid) return Page();
 
-            new AddCustomerInformation(HttpContext.Session).Exec(CustomerInformation);
+            addCustomerInformation.Exec(CustomerInformation);
 
             return RedirectToPage("/Checkout/Payment");
         }

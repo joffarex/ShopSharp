@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
 using ShopSharp.Application.Cart.Dto;
+using ShopSharp.Application.Infrastructure;
 using ShopSharp.Database;
 using ShopSharp.Domain.Models;
 
@@ -13,17 +11,17 @@ namespace ShopSharp.Application.Cart
     public class AddToCart
     {
         private readonly ApplicationDbContext _context;
-        private readonly ISession _session;
+        private readonly ISessionManager _sessionManager;
 
-        public AddToCart(ISession session, ApplicationDbContext context)
+        public AddToCart(ISessionManager sessionManager, ApplicationDbContext context)
         {
-            _session = session;
+            _sessionManager = sessionManager;
             _context = context;
         }
 
         public async Task<bool> ExecAsync(CartDto cartDto)
         {
-            var stockOnHold = _context.StocksOnHold.Where(x => x.SessionId == _session.Id).ToList();
+            var stockOnHold = _context.StocksOnHold.Where(x => x.SessionId == _sessionManager.GetId()).ToList();
             var stockToHold = _context.Stocks.Where(x => x.Id == cartDto.StockId).FirstOrDefault();
 
             if (stockToHold == null) return false;
@@ -37,7 +35,7 @@ namespace ShopSharp.Application.Cart
                 _context.StocksOnHold.Add(new StockOnHold
                 {
                     StockId = stockToHold.Id,
-                    SessionId = _session.Id,
+                    SessionId = _sessionManager.GetId(),
                     Quantity = cartDto.Quantity,
                     ExpiryDate = DateTime.Now.AddMinutes(20)
                 });
@@ -48,25 +46,7 @@ namespace ShopSharp.Application.Cart
 
             await _context.SaveChangesAsync();
 
-            var cartList = new List<CartProduct>();
-            var jsonCardProduct = _session.GetString("cart");
-
-            if (!string.IsNullOrEmpty(jsonCardProduct))
-                cartList = JsonConvert.DeserializeObject<List<CartProduct>>(jsonCardProduct);
-
-            // If product is already in cart list, increase quantity
-            if (cartList.Any(x => x.StockId == cartDto.StockId))
-                cartList.Find(x => x.StockId == cartDto.StockId).Quantity += cartDto.Quantity;
-            else
-                cartList.Add(new CartProduct
-                {
-                    StockId = cartDto.StockId,
-                    Quantity = cartDto.Quantity
-                });
-
-            jsonCardProduct = JsonConvert.SerializeObject(cartList);
-
-            _session.SetString("cart", jsonCardProduct);
+            _sessionManager.AddProduct(cartDto.StockId, cartDto.Quantity);
 
             return true;
         }

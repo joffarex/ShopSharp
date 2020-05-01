@@ -1,26 +1,22 @@
-﻿using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
-using ShopSharp.Application.Cart.ViewModels;
-using ShopSharp.Domain.Models;
+﻿using ShopSharp.Application.Cart.ViewModels;
+using ShopSharp.Application.Infrastructure;
 
 namespace ShopSharp.Application.Cart
 {
     public class GetCustomerInformation
     {
-        private readonly ISession _session;
+        private readonly ISessionManager _sessionManager;
 
-        public GetCustomerInformation(ISession session)
+        public GetCustomerInformation(ISessionManager sessionManager)
         {
-            _session = session;
+            _sessionManager = sessionManager;
         }
 
         public CustomerInformationViewModel Exec()
         {
-            var jsonCustomerInformation = _session.GetString("customer-info");
+            var customerInformation = _sessionManager.GetCustomerInformation();
 
-            if (string.IsNullOrEmpty(jsonCustomerInformation)) return null;
-
-            var customerInformation = JsonConvert.DeserializeObject<CustomerInformation>(jsonCustomerInformation);
+            if (customerInformation == null) return null;
 
             return new CustomerInformationViewModel
             {

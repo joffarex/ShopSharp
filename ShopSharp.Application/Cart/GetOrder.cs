@@ -1,33 +1,28 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Microsoft.AspNetCore.Http;
+﻿using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using ShopSharp.Application.Cart.Dto;
 using ShopSharp.Application.Cart.ViewModels;
+using ShopSharp.Application.Infrastructure;
 using ShopSharp.Database;
-using ShopSharp.Domain.Models;
 
 namespace ShopSharp.Application.Cart
 {
     public class GetOrder
     {
         private readonly ApplicationDbContext _context;
-        private readonly ISession _session;
+        private readonly ISessionManager _sessionManager;
 
-        public GetOrder(ISession session, ApplicationDbContext context)
+        public GetOrder(ISessionManager sessionManager, ApplicationDbContext context)
         {
-            _session = session;
+            _sessionManager = sessionManager;
             _context = context;
         }
 
         public OrderViewModel Exec()
         {
-            var cart = _session.GetString("cart");
+            var cart = _sessionManager.GetCart();
 
-            var cartList = JsonConvert.DeserializeObject<List<CartProduct>>(cart);
-
-            var listOfProducts = cartList.Select(product => _context.Stocks.Include(x => x.Product)
+            var listOfProducts = cart.Select(product => _context.Stocks.Include(x => x.Product)
                 .Where(x => x.Id == product.StockId)
                 .Select(x => new OrderProductDto
                 {
@@ -38,9 +33,7 @@ namespace ShopSharp.Application.Cart
                 }).FirstOrDefault()
             ).ToList();
 
-            var jsonCustomerInformation = _session.GetString("customer-info");
-
-            var customerInformation = JsonConvert.DeserializeObject<CustomerInformation>(jsonCustomerInformation);
+            var customerInformation = _sessionManager.GetCustomerInformation();
 
             return new OrderViewModel
             {

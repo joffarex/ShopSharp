@@ -1,4 +1,5 @@
-﻿using ShopSharp.Application.Orders;
+﻿using ShopSharp.Application.Cart;
+using ShopSharp.Application.Orders;
 using ShopSharp.Application.OrdersAdmin;
 using ShopSharp.Application.ProductsAdmin;
 using ShopSharp.Application.StockAdmin;
@@ -16,6 +17,14 @@ namespace Microsoft.Extensions.DependencyInjection
             @this.AddTransient<GetOrder>();
             @this.AddTransient<GetOrders>();
             @this.AddTransient<UpdateOrder>();
+
+            @this.AddTransient<AddCustomerInformation>();
+            @this.AddTransient<AddToCart>();
+            @this.AddTransient<GetCart>();
+            @this.AddTransient<GetCustomerInformation>();
+            @this.AddTransient<ShopSharp.Application.Cart.GetOrder>();
+            @this.AddTransient<RemoveFromCart>();
+
 
             @this.AddTransient<CreateOrder>();
             @this.AddTransient<ShopSharp.Application.Orders.GetOrder>();

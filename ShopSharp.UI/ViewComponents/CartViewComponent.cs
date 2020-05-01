@@ -1,28 +1,27 @@
 ﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using ShopSharp.Application.Cart;
-using ShopSharp.Database;
 
 namespace ShopSharp.UI.ViewComponents
 {
     public class CartViewComponent : ViewComponent
     {
-        private readonly ApplicationDbContext _context;
+        private readonly GetCart _getCart;
 
-        public CartViewComponent(ApplicationDbContext context)
+        public CartViewComponent(GetCart getCart)
         {
-            _context = context;
+            _getCart = getCart;
         }
 
         public IViewComponentResult Invoke(string view = "Default")
         {
             if (view == "Small")
             {
-                var totalValue = new GetCart(HttpContext.Session, _context).Exec().Sum(x => x.RealValue * x.Quantity);
+                var totalValue = _getCart.Exec().Sum(x => x.RealValue * x.Quantity);
                 return View(view, $"${totalValue}");
             }
 
-            return View(view, new GetCart(HttpContext.Session, _context).Exec());
+            return View(view, _getCart.Exec());
         }
     }
 }

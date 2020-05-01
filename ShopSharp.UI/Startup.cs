@@ -7,7 +7,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
+using ShopSharp.Application.Infrastructure;
 using ShopSharp.Database;
+using ShopSharp.UI.Infrastructure;
 using Stripe;
 
 namespace ShopSharp.UI
@@ -24,6 +26,14 @@ namespace ShopSharp.UI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpContextAccessor();
+
+            // services.Configure<CookiePolicyOptions>(options =>
+            // {
+            //     options.CheckConsentNeeded = context => true;
+            //     options.MinimumSameSitePolicy = SameSiteMode.None;
+            // });
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration["DefaultConnection"]));
 
@@ -62,6 +72,8 @@ namespace ShopSharp.UI
                 options.Cookie.Name = "Cart";
                 options.Cookie.MaxAge = TimeSpan.FromMinutes(20);
             });
+
+            services.AddTransient<ISessionManager, SessionManager>();
 
             StripeConfiguration.ApiKey = Configuration.GetSection("Stripe")["SecretKey"];
 

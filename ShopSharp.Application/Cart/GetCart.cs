@@ -1,34 +1,30 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using ShopSharp.Application.Cart.ViewModels;
+using ShopSharp.Application.Infrastructure;
 using ShopSharp.Database;
-using ShopSharp.Domain.Models;
 
 namespace ShopSharp.Application.Cart
 {
     public class GetCart
     {
         private readonly ApplicationDbContext _context;
-        private readonly ISession _session;
+        private readonly ISessionManager _sessionManager;
 
-        public GetCart(ISession session, ApplicationDbContext context)
+        public GetCart(ISessionManager sessionManager, ApplicationDbContext context)
         {
-            _session = session;
+            _sessionManager = sessionManager;
             _context = context;
         }
 
         public IEnumerable<CartViewModel> Exec()
         {
-            var jsonCardProduct = _session.GetString("cart");
+            var cart = _sessionManager.GetCart();
 
-            if (string.IsNullOrEmpty(jsonCardProduct)) return new List<CartViewModel>();
+            if (cart == null) return new List<CartViewModel>();
 
-            var cartList = JsonConvert.DeserializeObject<List<CartProduct>>(jsonCardProduct);
-
-            return cartList.Select(product => _context.Stocks.Include(y => y.Product)
+            return cart.Select(product => _context.Stocks.Include(y => y.Product)
                 .Where(x => x.Id == product.StockId)
                 .Select(x => new CartViewModel
                 {

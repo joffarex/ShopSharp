@@ -2,22 +2,14 @@
 using Microsoft.AspNetCore.Mvc;
 using ShopSharp.Application.Cart;
 using ShopSharp.Application.Cart.Dto;
-using ShopSharp.Database;
 
 namespace ShopSharp.UI.Controllers
 {
     [Route("[controller]/[action]")]
     public class CartController : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public CartController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
-
         [HttpPost("{stockId}")]
-        public async Task<IActionResult> AddOne(int stockId)
+        public async Task<IActionResult> AddOne(int stockId, [FromServices] AddToCart addToCart)
         {
             var cartDto = new CartDto
             {
@@ -25,7 +17,7 @@ namespace ShopSharp.UI.Controllers
                 Quantity = 1
             };
 
-            var result = await new AddToCart(HttpContext.Session, _context).ExecAsync(cartDto);
+            var result = await addToCart.ExecAsync(cartDto);
 
             if (result) return Ok("Item added to cart");
 
@@ -33,7 +25,7 @@ namespace ShopSharp.UI.Controllers
         }
 
         [HttpPost("{stockId}")]
-        public async Task<IActionResult> RemoveOne(int stockId)
+        public async Task<IActionResult> RemoveOne(int stockId, [FromServices] RemoveFromCart removeFromCart)
         {
             var cartDto = new CartDto
             {
@@ -41,7 +33,7 @@ namespace ShopSharp.UI.Controllers
                 Quantity = 1
             };
 
-            var result = await new RemoveFromCart(HttpContext.Session, _context).ExecAsync(cartDto);
+            var result = await removeFromCart.ExecAsync(cartDto);
 
             if (result) return Ok("Item removed from cart");
 
@@ -49,7 +41,7 @@ namespace ShopSharp.UI.Controllers
         }
 
         [HttpPost("{stockId}")]
-        public async Task<IActionResult> RemoveAll(int stockId)
+        public async Task<IActionResult> RemoveAll(int stockId, [FromServices] RemoveFromCart removeFromCart)
         {
             var cartDto = new CartDto
             {
@@ -57,7 +49,7 @@ namespace ShopSharp.UI.Controllers
                 All = true
             };
 
-            var result = await new RemoveFromCart(HttpContext.Session, _context).ExecAsync(cartDto);
+            var result = await removeFromCart.ExecAsync(cartDto);
 
             if (result) return Ok("Item removed all cart");
 

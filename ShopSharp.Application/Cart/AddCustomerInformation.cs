@@ -1,22 +1,21 @@
-﻿using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
-using ShopSharp.Application.Cart.Dto;
+﻿using ShopSharp.Application.Cart.Dto;
+using ShopSharp.Application.Infrastructure;
 using ShopSharp.Domain.Models;
 
 namespace ShopSharp.Application.Cart
 {
     public class AddCustomerInformation
     {
-        private readonly ISession _session;
+        private readonly ISessionManager _sessionManager;
 
-        public AddCustomerInformation(ISession session)
+        public AddCustomerInformation(ISessionManager sessionManager)
         {
-            _session = session;
+            _sessionManager = sessionManager;
         }
 
         public void Exec(CustomerInformationDto customerInformationDto)
         {
-            var customerInformation = new CustomerInformation
+            _sessionManager.AddCustomerInformation(new CustomerInformation
             {
                 FirstName = customerInformationDto.FirstName,
                 LastName = customerInformationDto.LastName,
@@ -25,11 +24,7 @@ namespace ShopSharp.Application.Cart
                 Address = customerInformationDto.Address,
                 City = customerInformationDto.City,
                 PostCode = customerInformationDto.PostCode
-            };
-
-            var jsonCustomerInformation = JsonConvert.SerializeObject(customerInformation);
-
-            _session.SetString("customer-info", jsonCustomerInformation);
+            });
         }
     }
 }

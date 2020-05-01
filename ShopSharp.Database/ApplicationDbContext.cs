@@ -21,6 +21,7 @@ namespace ShopSharp.Database
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<OrderStock>().HasKey(x => new {x.StockId, x.OrderId});
+            modelBuilder.Entity<Product>().Property(p => p.Value).HasColumnType("decimal(18,2)");
         }
     }
 }
