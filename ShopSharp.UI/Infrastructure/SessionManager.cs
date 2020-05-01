@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
-using ShopSharp.Application.Infrastructure;
+using ShopSharp.Domain.Infrastructure;
 using ShopSharp.Domain.Models;
 
 namespace ShopSharp.UI.Infrastructure
@@ -21,7 +22,7 @@ namespace ShopSharp.UI.Infrastructure
             return _session.Id;
         }
 
-        public void AddProduct(int stockId, int quantity)
+        public void AddProduct(CartProduct cartProduct)
         {
             var cartList = new List<CartProduct>();
             var jsonCardProduct = _session.GetString("cart");
@@ -30,14 +31,10 @@ namespace ShopSharp.UI.Infrastructure
                 cartList = JsonConvert.DeserializeObject<List<CartProduct>>(jsonCardProduct);
 
             // If product is already in cart list, increase quantity
-            if (cartList.Any(x => x.StockId == stockId))
-                cartList.Find(x => x.StockId == stockId).Quantity += quantity;
+            if (cartList.Any(x => x.StockId == cartProduct.StockId))
+                cartList.Find(x => x.StockId == cartProduct.StockId).Quantity += cartProduct.Quantity;
             else
-                cartList.Add(new CartProduct
-                {
-                    StockId = stockId,
-                    Quantity = quantity
-                });
+                cartList.Add(cartProduct);
 
             jsonCardProduct = JsonConvert.SerializeObject(cartList);
 
@@ -66,13 +63,15 @@ namespace ShopSharp.UI.Infrastructure
             _session.SetString("cart", jsonCartProduct);
         }
 
-        public List<CartProduct> GetCart()
+        public IEnumerable<TResult> GetCart<TResult>(Func<CartProduct, TResult> selector)
         {
             var jsonCardProduct = _session.GetString("cart");
 
-            if (string.IsNullOrEmpty(jsonCardProduct)) return null;
+            if (string.IsNullOrEmpty(jsonCardProduct)) return new List<TResult>();
 
-            return JsonConvert.DeserializeObject<List<CartProduct>>(jsonCardProduct);
+            var cartList = JsonConvert.DeserializeObject<IEnumerable<CartProduct>>(jsonCardProduct);
+
+            return cartList.Select(selector);
         }
 
         public void AddCustomerInformation(CustomerInformation customerInformation)
