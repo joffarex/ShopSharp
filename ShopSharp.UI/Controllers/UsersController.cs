@@ -1,8 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using ShopSharp.Application.UsersAdmin;
-using ShopSharp.Application.UsersAdmin.Dto;
 
 namespace ShopSharp.UI.Controllers
 {
@@ -10,20 +11,32 @@ namespace ShopSharp.UI.Controllers
     [Authorize(Policy = "Admin")]
     public class UsersController : Controller
     {
-        private readonly CreateUser _createUser;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public UsersController(CreateUser createUser)
+        public UsersController(UserManager<IdentityUser> userManager)
         {
-            _createUser = createUser;
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> CreateUser([FromBody] UserDto userDto)
         {
-            var success = await _createUser.ExecAsync(userDto);
+            var managerUser = new IdentityUser
+            {
+                UserName = userDto.Username
+            };
 
-            if (success) return Ok();
+            await _userManager.CreateAsync(managerUser, userDto.Password);
 
-            return BadRequest();
+            var managerClaim = new Claim("Role", "Manager");
+            await _userManager.AddClaimAsync(managerUser, managerClaim);
+
+            return Ok();
+        }
+
+        public class UserDto
+        {
+            [Required] public string Username { get; set; }
+            [Required] public string Password { get; set; }
         }
     }
 }
