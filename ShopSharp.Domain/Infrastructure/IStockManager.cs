@@ -8,6 +8,7 @@ namespace ShopSharp.Domain.Infrastructure
         Stock GetStockWithProduct(int stockId);
         bool EnoughStock(int stockId, int quantity);
         Task PutStockOnHold(int stockId, int quantity, string sessionId);
+        Task RetrieveExpiresStockOnHold();
         Task RemoveStockFromHold(string sessionId);
         Task RemoveStockFromHold(int stockId, int quantity, string sessionId);
     }

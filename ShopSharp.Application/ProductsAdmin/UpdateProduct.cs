@@ -1,39 +1,39 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using ShopSharp.Application.ProductsAdmin.Dto;
 using ShopSharp.Application.ProductsAdmin.ViewModels;
-using ShopSharp.Database;
+using ShopSharp.Domain.Infrastructure;
 
 namespace ShopSharp.Application.ProductsAdmin
 {
     public class UpdateProduct
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IProductManager _productManager;
 
-        public UpdateProduct(ApplicationDbContext context)
+        public UpdateProduct(IProductManager productManager)
         {
-            _context = context;
+            _productManager = productManager;
         }
 
         public async Task<ProductViewModel> ExecAsync(int id, ProductDto productDto)
         {
-            var product = _context.Products.FirstOrDefault(x => x.Id == id);
+            var product = _productManager.GetProductById(id, x => x);
 
-            if (product == null) throw new Exception("Product not found");
+            if (product == null) return null;
 
             product.Name = productDto.Name;
             product.Description = productDto.Description;
             product.Value = decimal.Parse(productDto.Value);
 
-            await _context.SaveChangesAsync();
+            var success = await _productManager.UpdateProduct(product) > 0;
+
+            if (!success) return null;
 
             return new ProductViewModel
             {
                 Id = product.Id,
                 Name = product.Name,
                 Description = product.Description,
-                Value = $"${product.Value:N2}"
+                Value = product.Value.GetFormattedValue()
             };
         }
     }

@@ -1,26 +1,20 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using ShopSharp.Database;
+﻿using System.Threading.Tasks;
+using ShopSharp.Domain.Infrastructure;
 
 namespace ShopSharp.Application.ProductsAdmin
 {
     public class DeleteProduct
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IProductManager _productManager;
 
-        public DeleteProduct(ApplicationDbContext context)
+        public DeleteProduct(IProductManager productManager)
         {
-            _context = context;
+            _productManager = productManager;
         }
 
         public async Task<bool> ExecAsync(int id)
         {
-            var product = _context.Products.FirstOrDefault(x => x.Id == id);
-            _context.Products.Remove(product ?? throw new Exception("Product not found"));
-            await _context.SaveChangesAsync();
-
-            return true;
+            return await _productManager.DeleteProduct(id) > 0;
         }
     }
 }

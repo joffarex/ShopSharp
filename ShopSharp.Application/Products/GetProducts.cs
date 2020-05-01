@@ -1,36 +1,34 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using ShopSharp.Application.Products.ViewModels;
-using ShopSharp.Database;
+using ShopSharp.Domain.Infrastructure;
 
 namespace ShopSharp.Application.Products
 {
     public class GetProducts
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IProductManager _productManager;
 
-        public GetProducts(ApplicationDbContext context)
+        public GetProducts(IProductManager productManager)
         {
-            _context = context;
+            _productManager = productManager;
         }
 
         public IEnumerable<ProductViewModel> Exec()
         {
-            return _context.Products.Include(x => x.Stocks)
-                .Select(x => new ProductViewModel
+            return _productManager.GetProducts(x => new ProductViewModel
+            {
+                Name = x.Name,
+                Description = x.Description,
+                Value = x.Value.GetFormattedValue(),
+                StockCount = x.Stocks.Sum(y => y.Quantity),
+                Stocks = x.Stocks.Select(y => new StockViewModel
                 {
-                    Name = x.Name,
-                    Description = x.Description,
-                    Value = $"${x.Value:N2}", // 69420.60 => $ 69,420.60
-                    StockCount = x.Stocks.Sum(y => y.Quantity),
-                    Stocks = x.Stocks.Select(y => new StockViewModel
-                    {
-                        Id = y.Id,
-                        Description = y.Description,
-                        Quantity = y.Quantity
-                    })
-                }).ToList();
+                    Id = y.Id,
+                    Description = y.Description,
+                    Quantity = y.Quantity
+                })
+            });
         }
     }
 }

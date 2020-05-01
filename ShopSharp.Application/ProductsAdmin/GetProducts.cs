@@ -1,26 +1,25 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using ShopSharp.Application.ProductsAdmin.ViewModels;
-using ShopSharp.Database;
+using ShopSharp.Domain.Infrastructure;
 
 namespace ShopSharp.Application.ProductsAdmin
 {
     public class GetProducts
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IProductManager _productManager;
 
-        public GetProducts(ApplicationDbContext context)
+        public GetProducts(IProductManager productManager)
         {
-            _context = context;
+            _productManager = productManager;
         }
 
         public IEnumerable<ProductsViewModel> Exec()
         {
-            return _context.Products.ToList().Select(x => new ProductsViewModel
+            return _productManager.GetProducts(x => new ProductsViewModel
             {
                 Id = x.Id,
                 Name = x.Name,
-                Value = $"${x.Value:N2}" // 69420.60 => $ 69,420.60
+                Value = x.Value.GetFormattedValue()
             });
         }
     }

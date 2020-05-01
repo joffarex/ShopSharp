@@ -1,48 +1,30 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using ShopSharp.Application.Products.ViewModels;
-using ShopSharp.Database;
+using ShopSharp.Domain.Infrastructure;
 
 namespace ShopSharp.Application.Products
 {
     public class GetProduct
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IProductManager _productManager;
+        private readonly IStockManager _stockManager;
 
-        public GetProduct(ApplicationDbContext context)
+        public GetProduct(IStockManager stockManager, IProductManager productManager)
         {
-            _context = context;
+            _stockManager = stockManager;
+            _productManager = productManager;
         }
 
         public async Task<ProductViewModel> ExecAsync(string name)
         {
-            var stocksOnHold = _context.StocksOnHold.AsEnumerable()
-                .Where(x => x.ExpiryDate < DateTime.Now).ToList();
+            await _stockManager.RetrieveExpiresStockOnHold();
 
-            if (stocksOnHold.Count > 0)
-            {
-                var stockToReturn = _context.Stocks.AsEnumerable().Where(
-                    x => stocksOnHold.Any(y => y.StockId == x.Id)
-                ).ToList();
-
-                foreach (var stock in stockToReturn)
-                {
-                    var stockOnHold = stocksOnHold.FirstOrDefault(x => x.StockId == stock.Id);
-                    if (stockOnHold != null) stock.Quantity += stockOnHold.Quantity;
-
-                    _context.StocksOnHold.RemoveRange(stocksOnHold);
-
-                    await _context.SaveChangesAsync();
-                }
-            }
-
-            return _context.Products.Include(x => x.Stocks).Where(x => x.Name == name).Select(x => new ProductViewModel
+            return _productManager.GetProductByName(name, x => new ProductViewModel
             {
                 Name = x.Name,
                 Description = x.Description,
-                Value = $"${x.Value:N2}", // 69420.60 => $ 69,420.60
+                Value = x.Value.GetFormattedValue(),
                 StockCount = x.Stocks.Sum(y => y.Quantity),
                 Stocks = x.Stocks.Select(y => new StockViewModel
                 {
@@ -50,7 +32,7 @@ namespace ShopSharp.Application.Products
                     Description = y.Description,
                     Quantity = y.Quantity
                 })
-            }).FirstOrDefault();
+            });
         }
     }
 }

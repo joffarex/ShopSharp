@@ -60,6 +60,29 @@ namespace ShopSharp.Database
             return _context.SaveChangesAsync();
         }
 
+        public Task RetrieveExpiresStockOnHold()
+        {
+            var stocksOnHold = _context.StocksOnHold.AsEnumerable()
+                .Where(x => x.ExpiryDate < DateTime.Now)
+                .ToList();
+
+            if (stocksOnHold.Count <= 0) return Task.CompletedTask;
+
+            var stockToReturn = _context.Stocks.AsEnumerable()
+                .Where(x => stocksOnHold.Any(y => y.StockId == x.Id))
+                .ToList();
+
+            foreach (var stock in stockToReturn)
+            {
+                var stockOnHold = stocksOnHold.FirstOrDefault(x => x.StockId == stock.Id);
+                if (stockOnHold != null) stock.Quantity += stockOnHold.Quantity;
+
+                _context.StocksOnHold.RemoveRange(stocksOnHold);
+            }
+
+            return _context.SaveChangesAsync();
+        }
+
         public Task RemoveStockFromHold(string sessionId)
         {
             var stockOnHold = _context.StocksOnHold

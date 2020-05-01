@@ -1,18 +1,18 @@
 ﻿using System.Threading.Tasks;
 using ShopSharp.Application.ProductsAdmin.Dto;
 using ShopSharp.Application.ProductsAdmin.ViewModels;
-using ShopSharp.Database;
+using ShopSharp.Domain.Infrastructure;
 using ShopSharp.Domain.Models;
 
 namespace ShopSharp.Application.ProductsAdmin
 {
     public class CreateProduct
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IProductManager _productManager;
 
-        public CreateProduct(ApplicationDbContext context)
+        public CreateProduct(IProductManager productManager)
         {
-            _context = context;
+            _productManager = productManager;
         }
 
         public async Task<ProductViewModel> ExecAsync(ProductDto productDto)
@@ -24,16 +24,16 @@ namespace ShopSharp.Application.ProductsAdmin
                 Value = decimal.Parse(productDto.Value)
             };
 
-            _context.Products.Add(product);
+            var success = await _productManager.CreateProduct(product) > 0;
 
-            await _context.SaveChangesAsync();
+            if (!success) return null;
 
             return new ProductViewModel
             {
                 Id = product.Id,
                 Name = product.Name,
                 Description = product.Description,
-                Value = $"${product.Value:N2}"
+                Value = product.Value.GetFormattedValue()
             };
         }
     }
