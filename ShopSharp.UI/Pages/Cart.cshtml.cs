@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ShopSharp.Application.Cart;
@@ -17,10 +18,13 @@ namespace ShopSharp.UI.Pages
         }
 
         public IEnumerable<CartViewModel> Cart { get; set; }
+        public string TotalValue { get; set; }
 
         public IActionResult OnGet()
         {
             Cart = new GetCart(HttpContext.Session, _context).Exec();
+            var totalValue = Cart.Sum(x => x.RealValue * x.Quantity);
+            TotalValue = $"${totalValue}";
 
             return Page();
         }

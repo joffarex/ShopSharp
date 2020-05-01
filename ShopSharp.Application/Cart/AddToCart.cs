@@ -30,13 +30,17 @@ namespace ShopSharp.Application.Cart
 
             if (stockToHold.Quantity < cartDto.Quantity) return false;
 
-            _context.StocksOnHold.Add(new StockOnHold
-            {
-                StockId = stockToHold.Id,
-                SessionId = _session.Id,
-                Quantity = cartDto.Quantity,
-                ExpiryDate = DateTime.Now.AddMinutes(20)
-            });
+
+            if (stockOnHold.Any(x => x.StockId == cartDto.StockId))
+                stockOnHold.Find(x => x.StockId == cartDto.StockId).Quantity += cartDto.Quantity;
+            else
+                _context.StocksOnHold.Add(new StockOnHold
+                {
+                    StockId = stockToHold.Id,
+                    SessionId = _session.Id,
+                    Quantity = cartDto.Quantity,
+                    ExpiryDate = DateTime.Now.AddMinutes(20)
+                });
 
             stockToHold.Quantity -= cartDto.Quantity;
 
