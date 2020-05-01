@@ -2,7 +2,7 @@
 {
     public static class DecimalExtensions
     {
-        public static string GetValueString(this decimal value)
+        public static string GetFormattedValue(this decimal value)
         {
             return $"${value:N2}";
         }

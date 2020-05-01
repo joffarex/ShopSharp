@@ -19,7 +19,7 @@ namespace ShopSharp.Application.Cart
                 .GetCart(x => new CartViewModel
                 {
                     Name = x.ProductName,
-                    Value = x.Value.GetValueString(),
+                    Value = x.Value.GetFormattedValue(),
                     RealValue = x.Value,
                     StockId = x.StockId,
                     Quantity = x.Quantity

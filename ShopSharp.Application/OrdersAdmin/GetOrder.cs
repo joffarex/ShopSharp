@@ -33,7 +33,7 @@ namespace ShopSharp.Application.OrdersAdmin
                     Quantity = y.Quantity,
                     StockDescription = y.Stock.Description
                 }),
-                TotalValue = $"${x.OrderStocks.Sum(y => y.Stock.Product.Value):N2}"
+                TotalValue = x.OrderStocks.Sum(y => y.Stock.Product.Value).GetFormattedValue()
             });
         }
     }

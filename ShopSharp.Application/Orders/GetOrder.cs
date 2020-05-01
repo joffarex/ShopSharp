@@ -29,11 +29,11 @@ namespace ShopSharp.Application.Orders
                 {
                     Name = y.Stock.Product.Name,
                     Description = y.Stock.Product.Description,
-                    Value = $"${y.Stock.Product.Value:N2}",
+                    Value = y.Stock.Product.Value.GetFormattedValue(),
                     Quantity = y.Quantity,
                     StockDescription = y.Stock.Description
                 }),
-                TotalValue = $"${x.OrderStocks.Sum(y => y.Stock.Product.Value):N2}"
+                TotalValue = x.OrderStocks.Sum(y => y.Stock.Product.Value).GetFormattedValue()
             });
         }
     }
