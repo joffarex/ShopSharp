@@ -1,4 +1,4 @@
-# shopsharp
+# ShopSharp
 
 Online shop template build with *ASP.NET Core 3.1, Bulma 0.8.1, VueJS 2.6.11*, using DDD, Repository Pattern
 
